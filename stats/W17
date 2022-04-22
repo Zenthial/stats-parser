@@ -1,0 +1,44 @@
+["W17"] = {
+	Name = "W17"
+	FullName = "Assault Rifle"
+	Category = "Assault"
+	Description = "The WIJ Mark 17 Individual Defense and Combat Initiator has proven to be effective under many combat scenarios. It is a highly popular rifle throughout the WIJ forces, as it is very durable. The W17 Assault Rifle is produced on the planet Gorius 5 by GORIUS ARMORIES for the WIJ Corporation."
+	QuickDescription = "Automatic, Single Shot"
+	WeaponCost = 0
+	Slot = 1
+	Holster = Holsters.Back
+	NumHandles = 1
+	NumBarrels = 1
+	CanSprint = true
+	CanCrouch = true
+	HeadshotMultiplier = 1.7
+	WalkspeedReduce = 0
+	EquipTime = 0.3
+	BatteryDepletionMin = 2
+	BatteryDepletionMax = 3
+	ShotsDeplete = 10
+	MaxSpread = 2.5
+	MinSpread = 0.5
+	HeatRate = 2
+	CoolTime = 3
+	CoolWait = 0.3
+	CalculateDamage = function(damage, distance)
+		if damage > 10 then
+			return damage
+		else
+			return 10
+		end
+	end,
+	VehicleMultiplier = 1
+	FireRate = 11
+	ChargeWait = 0
+	GunType = GunTypes.Auto
+	FireMode = FireMode.Single
+	BulletType = BulletType.Ray
+	HandleWelds = {
+		{	limb = "Right Arm",
+			C0 = CFrame.new(0, -0.5, -0.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+			C1 = CFrame.new()
+		},
+	},
+}

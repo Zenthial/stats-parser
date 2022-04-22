@@ -9,4 +9,8 @@
 	Holster = Holsters.Hip
 	NumHandles = 1
 	NumBarrels = 1
+	CanSprint = true
+	CanCrouch = true
+	MaxSpread = 2.5
+	MinSpread = 0.5
 }

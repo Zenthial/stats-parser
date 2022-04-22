@@ -1,63 +1,64 @@
-local module = {
-	["D01"] = {
-		name						= "D01",
-		fullname					= "Orbital Target Designator-01",
+	["W17"] = {
+		name						= "W17",
+		fullname					= "Assault Rifle",
 		category					= "Assault",
-		description					= "The ability for a squad commander to call in orbital fire support is invaluable. Once a target has been designated by the D01, a command is relayed to a appropriately equipped warship or satellite in orbit to fire its phaser array to a devastating effect, within seconds.",
-		quickdesc					= "Single Shot",		
-		defaultcost					= 94000,
-		cost						= 94000,
-		slot						= 2,
-		holster						= "Hip",
+		description					= "The WIJ Mark 17 Individual Defense and Combat Initiator has proven to be effective under many combat scenarios. It is a highly popular rifle throughout the WIJ forces, as it is very durable. The W17 Assault Rifle is produced on the planet Gorius 5 by GORIUS ARMORIES for the WIJ Corporation.",
+		quickdesc					= "Automatic, Single Shot",		
+		defaultcost					= 0,
+		cost						= 0,
+		slot						= 1,
+		holster						= "Back",
 		handles						= 1,
 		barrels						= 1,
-		canaim 						= true,
+		canaim						= true,
 		cansprint 					= true,
 		cancrouch 					= true,
 		canheadshot					= true,
-		headshotmultiplier			= 2,
+		headshotmultiplier			= 1.7,
 		teamkill					= false,
-		defaultlocked 				= true,
+		defaultlocked 				= false,
 		walkspeedreduce				= 0,
-		equipwait					= 0.1,
+		equipwait					= 0.3,
 		
-		batterymin 					= 100,
-		batterymax 					= 100,
-		shotsdeplete				= 1,
-
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 10,
+		
 		maxspread					= 2.5,
-		minspread					= 0.5,
+		minspread					= .5,
 		readjust					= 2,
-		camerarecoil                = 1,
+		camerarecoil                = 1.7,
 		recoilrate					= 0.5,
-		maxrecoil					= 15,
+		maxrecoil					= 18,
 		
-		numshots					= 1,
+		numshots					= 3,
 		
-		heatrate 					= 100,
-		cooltime 					= 3,
-		coolwait 					= 0,
+		heatrate 					= 2,
+		cooltime 					= 3,	
+		coolwait 					= .3,
 		
-		damage						= 100,
+		damage						= 8,
 		calcDamage = function(damage, distance)
-			return damage
+			if damage > 10 then
+				return damage
+			else
+				return 10
+			end
 		end,
-		vehiclemultiplier			= 100,
+		vehiclemultiplier			= 1,
 		
-		explosion					= { BlastRadius = 200 },
+		particlelifetime			= .1,
 		
-		particlelifetime			= 0.1,
+		firerate					= 11,
+		firewait 					= .15,
+		chargewait					= 0,
+		triggermode 				= "Auto",
+		firemode 					= "Single",
+		bullettype					= "Ray",
 		
-		firerate					= 0,
-		firewait 					= 0.15,
-		chargewait					= 4,
-
-		triggermode 				= "Semi",
-		firemode 					= "OrbitalStrike",
-		bullettype					= "OrbitalRay",
 		handlewelds 				= {
 			{	limb = "Right Arm",
-				C0 = CFrame.new(0, -0.5, -0.25) * CFrame.Angles(math.rad(-90), 0 ,0),
+				C0 = CFrame.new(0, -0.5, -0.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
 				C1 = CFrame.new()
 			},
 		},

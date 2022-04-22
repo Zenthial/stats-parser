@@ -9,15 +9,17 @@ use parsers::*;
 enum ValueType {
     String,
     Number,
+    Float,
     CustomStringFormat(String), // where the String is appended to the front of the found string
-    Function(u16),              // where the u16 is the expected amount of lines
-    Table(u16),                 // where the u16 is the expect amount of lines until a }
+    Function,
+    Table,
 }
 
 struct Options {
     old_name: String,
     new_name: String,
     value_type: ValueType,
+    found: bool,
 }
 
 impl Options {
@@ -26,6 +28,7 @@ impl Options {
             old_name: old_name.to_string(),
             new_name: new_name.to_string(),
             value_type: val,
+            found: false,
         }
     }
 }
@@ -37,22 +40,55 @@ fn get_options() -> Vec<Options> {
         Options::new("category", "Category", ValueType::String),
         Options::new("description", "Description", ValueType::String),
         Options::new("quickdesc", "QuickDescription", ValueType::String),
+        Options::new("cansprint", "CanSprint", ValueType::String),
+        Options::new("cancrouch", "CanCrouch", ValueType::String),
         Options::new("cost", "WeaponCost", ValueType::Number),
         Options::new("slot", "Slot", ValueType::Number),
         Options::new("barrels", "NumBarrels", ValueType::Number),
         Options::new("handles", "NumHandles", ValueType::Number),
+        Options::new("walkspeedreduce", "WalkspeedReduce", ValueType::Number),
+        Options::new("batterymin", "BatteryDepletionMin", ValueType::Number),
+        Options::new("batterymax", "BatteryDepletionMax", ValueType::Number),
+        Options::new("shotsdeplete", "ShotsDeplete", ValueType::Number),
         Options::new(
             "holster",
             "Holster",
             ValueType::CustomStringFormat("Holsters.".to_string()),
         ),
+        Options::new(
+            "triggermode",
+            "GunType",
+            ValueType::CustomStringFormat("GunTypes.".to_string()),
+        ),
+        Options::new(
+            "bullettype",
+            "BulletType",
+            ValueType::CustomStringFormat("BulletType.".to_string()),
+        ),
+        Options::new(
+            "firemode",
+            "FireMode",
+            ValueType::CustomStringFormat("FireMode.".to_string()),
+        ),
+        Options::new("equipwait", "EquipTime", ValueType::Float),
+        Options::new("chargewait", "ChargeWait", ValueType::Float),
+        Options::new("firerate", "FireRate", ValueType::Float),
+        Options::new("maxspread", "MaxSpread", ValueType::Float),
+        Options::new("minspread", "MinSpread", ValueType::Float),
+        Options::new("heatrate", "HeatRate", ValueType::Float),
+        Options::new("cooltime", "CoolTime", ValueType::Float),
+        Options::new("coolwait", "CoolWait", ValueType::Float),
+        Options::new("headshotmultiplier", "HeadshotMultiplier", ValueType::Float),
+        Options::new("vehiclemultiplier", "VehicleMultiplier", ValueType::Float),
+        Options::new("calcDamage", "CalculateDamage", ValueType::Function),
+        Options::new("handlewelds", "HandleWelds", ValueType::Table),
     ];
 
     options_vec
 }
 
 fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result<()> {
-    let options = get_options();
+    let mut options = get_options();
 
     let file_name = key_name
         .strip_prefix("[\"")
@@ -72,44 +108,75 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result
             break;
         }
 
-        for option in options.iter() {
-            match &option.value_type {
-                ValueType::String => {
-                    if let Some(result_str) = check_for_string(&str, &option.old_name) {
-                        stats_file
-                            .write(format!("\t{} = {}\n", option.new_name, result_str).as_bytes())?;
-                        break;
+        for option in &mut options {
+            if !option.found {
+                match &option.value_type {
+                    ValueType::String => {
+                        if let Some(result_str) = parse_string(&str, &option.old_name) {
+                            stats_file.write(
+                                format!("\t{} = {}\n", option.new_name, result_str).as_bytes(),
+                            )?;
+                            option.found = true;
+                            break;
+                        }
                     }
-                }
-                ValueType::Number => {
-                    if let Some(num) = check_for_number(&str, &option.old_name) {
-                        stats_file.write(format!("\t{} = {}\n", option.new_name, num).as_bytes())?;
-                        break;
+                    ValueType::Number => {
+                        if let Some(num) = parse_number(&str, &option.old_name) {
+                            stats_file
+                                .write(format!("\t{} = {}\n", option.new_name, num).as_bytes())?;
+                            option.found = true;
+                            break;
+                        }
                     }
-                }
-                ValueType::CustomStringFormat(format) => {
-                    if let Some(mut result_str) = check_for_string(&str, &option.old_name) {
-                        result_str = result_str
-                            .strip_prefix("\"")
-                            .expect("should have a \"")
-                            .to_string()
-                            .strip_suffix("\"")
-                            .expect("should have a \"")
-                            .to_string();
+                    ValueType::CustomStringFormat(format) => {
+                        if let Some(mut result_str) = parse_string(&str, &option.old_name) {
+                            result_str = result_str
+                                .strip_prefix("\"")
+                                .expect("should have a \"")
+                                .to_string()
+                                .strip_suffix("\"")
+                                .expect("should have a \"")
+                                .to_string();
 
-                        stats_file.write(
-                            format!(
-                                "\t{} = {}\n",
-                                option.new_name,
-                                format!("{}{}", format, result_str)
-                            )
-                            .as_bytes(),
+                            stats_file.write(
+                                format!(
+                                    "\t{} = {}\n",
+                                    option.new_name,
+                                    format!("{}{}", format, result_str)
+                                )
+                                .as_bytes(),
+                            )?;
+                            option.found = true;
+                            break;
+                        }
+                    }
+                    ValueType::Function => {
+                        parse_function(
+                            &str,
+                            reader,
+                            &option.old_name,
+                            &option.new_name,
+                            &mut stats_file,
                         )?;
-                        break;
+                    }
+                    ValueType::Table => {
+                        parse_table(
+                            &str,
+                            reader,
+                            &option.old_name,
+                            &option.new_name,
+                            &mut stats_file,
+                        )?;
+                    }
+                    ValueType::Float => {
+                        if let Some(num) = parse_float(&str, &option.old_name) {
+                            stats_file
+                                .write(format!("\t{} = {}\n", option.new_name, num).as_bytes())?;
+                            option.found = true;
+                            break;
+                        }
                     }
                 }
-                ValueType::Function(_) => todo!(),
-                ValueType::Table(_) => todo!(),
             }
         }
     }
@@ -127,7 +194,7 @@ fn handle_reader(buffer: &mut Vec<String>) {
             continue;
         }
 
-        if let Some(key) = check_for_key(&str) {
+        if let Some(key) = parse_key(&str) {
             let _res = handle_weapon_stats(key, buffer);
         }
     }
