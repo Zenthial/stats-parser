@@ -1,0 +1,71 @@
+local module = {
+	["D01"] = {
+		name						= "D01",
+		fullname					= "Orbital Target Designator-01",
+		category					= "Assault",
+		description					= "The ability for a squad commander to call in orbital fire support is invaluable. Once a target has been designated by the D01, a command is relayed to a appropriately equipped warship or satellite in orbit to fire its phaser array to a devastating effect, within seconds.",
+		quickdesc					= "Single Shot",		
+		defaultcost					= 94000,
+		cost						= 94000,
+		slot						= 2,
+		holster						= "Hip",
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= true,
+		walkspeedreduce				= 0,
+		equipwait					= 0.1,
+		
+		batterymin 					= 100,
+		batterymax 					= 100,
+		shotsdeplete				= 1,
+
+		maxspread					= 2.5,
+		minspread					= 0.5,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 0.5,
+		maxrecoil					= 15,
+		
+		numshots					= 1,
+		
+		heatrate 					= 100,
+		cooltime 					= 3,
+		coolwait 					= 0,
+		
+		damage						= 100,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 100,
+		
+		explosion					= { BlastRadius = 200 },
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 0,
+		firewait 					= 0.15,
+		chargewait					= 4,
+
+		triggermode 				= "Semi",
+		firemode 					= "OrbitalStrike",
+		bullettype					= "OrbitalRay",
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.5, -0.25) * CFrame.Angles(math.rad(-90), 0 ,0),
+				C1 = CFrame.new()
+			},
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, .3),
+			["Left Arm"]	= CFrame.new(-0.2, 0, 1.3),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-0.5, 0, 0.5)
+		}
+	},

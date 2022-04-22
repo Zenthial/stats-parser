@@ -1,0 +1,4491 @@
+local module = {
+	["D01"] = {
+		name						= "D01",
+		fullname					= "Orbital Target Designator-01",
+		category					= "Assault",
+		description					= "The ability for a squad commander to call in orbital fire support is invaluable. Once a target has been designated by the D01, a command is relayed to a appropriately equipped warship or satellite in orbit to fire its phaser array to a devastating effect, within seconds.",
+		quickdesc					= "Single Shot",		
+		defaultcost					= 94000,
+		cost						= 94000,
+		slot						= 2,
+		holster						= "Hip",
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= true,
+		walkspeedreduce				= 0,
+		equipwait					= 0.1,
+		
+		batterymin 					= 100,
+		batterymax 					= 100,
+		shotsdeplete				= 1,
+
+		maxspread					= 2.5,
+		minspread					= 0.5,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 0.5,
+		maxrecoil					= 15,
+		
+		numshots					= 1,
+		
+		heatrate 					= 100,
+		cooltime 					= 3,
+		coolwait 					= 0,
+		
+		damage						= 100,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 100,
+		
+		explosion					= { BlastRadius = 200 },
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 0,
+		firewait 					= 0.15,
+		chargewait					= 4,
+
+		triggermode 				= "Semi",
+		firemode 					= "OrbitalStrike",
+		bullettype					= "OrbitalRay",
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.5, -0.25) * CFrame.Angles(math.rad(-90), 0 ,0),
+				C1 = CFrame.new()
+			},
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, .3),
+			["Left Arm"]	= CFrame.new(-0.2, 0, 1.3),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-0.5, 0, 0.5)
+		}
+	},
+	
+	
+--effects/ships
+	["Missile"] = {	
+		name						= "Missile",
+		fullname					= "Ballistic Missile",		
+		category					= "Explosive",
+		description					= "",
+		quickdesc					= "Explosive Projectile",	
+		defaultcost					= 3750,	
+		cost						= 3750,
+		slot						= 1,
+		holster						= "Back",	
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canmelee					= false,
+		teamkill					= true,
+		walkspeedreduce				= 3,
+		equipwait					= 0.4,
+		
+		batterymin 					= 20,
+		batterymax 					= 20,
+		shotsdeplete				= 1,
+		
+		maxspread					= 2,
+		minspread					= 1,
+		readjust					= 2,
+		camerarecoil                = 7,
+		recoilrate					= 1,
+		maxrecoil					= 25,
+		
+		heatrate 					= 100,
+		cooltime 					= 3,
+		coolwait 					= 0,
+			
+		damage						= 1000,
+		calcDamage = function(damage, distance)
+			return damage + (50 * (1/distance))
+		end,
+		vehiclemultiplier			= 300,		
+		
+		explosion					= {
+									BlastPressure = 0,
+									BlastRadius = 30,
+									DestroyJointRadiusPercent = 1,
+									ExplosionType = "Craters",			
+									},
+		
+		particlelifetime			= .1,
+		
+		firerate					= 3,
+		firewait 					= 3,
+		chargewait					= 4,
+		triggermode 				= "Semi",
+		firemode 					= "SingleExplosive",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(.5, -1, -1.25) * CFrame.Angles(math.rad(0),0,math.rad(180)),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, .4, 1),
+			["Left Arm"]	= CFrame.new(.3, 1, 1),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+	["SpaceShip"] = {	
+		name						= "SpaceShip",
+		fullname					= "Charged Railgun",		
+		category					= "Explosive",
+		description					= "It was supposed to be a joke. Then everything went wrong.",
+		quickdesc					= "Semi Automatic, Single Explosise Beam",	
+		defaultcost					= 999999999,	
+		cost						= 999999999,
+		barrels						= 2,
+		teamkill					= true,
+		
+		shotsdeplete				= 80,
+		
+		maxspread					= 10,
+		cooltime 					= 8,	
+			
+		damage						= 20,
+		vehiclemultiplier			= 8,		
+		
+		calcDamage = function(damage, distance)
+			damage = damage + (10 * (1/(distance/3)))
+			return math.clamp(damage, 20, 35)
+		end,
+		
+		explosion					= {
+									BlastPressure = 0,
+									BlastRadius = 10,
+									DestroyJointRadiusPercent = 1,
+									ExplosionType = "Craters",			
+									},
+		
+		particlelifetime			= .1,
+		
+		firerate					= 15,
+		firewait 					= 0,
+		chargewait					= .5,
+		triggermode 				= "Auto",
+		firemode 					= "SingleShipExplosive",
+		bullettype					= "Ray",
+	},
+	["C2PatrolShip"] = {	
+		name						= "C2PatrolShip",
+		fullname					= "Charged Railgun",		
+		category					= "Explosive",
+		description					= "It was supposed to be a joke. Then everything went wrong.",
+		quickdesc					= "Semi Automatic, Single Explosise Beam",	
+		defaultcost					= 999999999,	
+		cost						= 999999999,
+		barrels						= 2,
+		teamkill					= true,
+		
+		shotsdeplete				= 0,
+		
+		maxspread					= 10,
+		cooltime 					= 8,	
+			
+		damage						= 50,
+		vehiclemultiplier			= 1,		
+		
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		
+		explosion					= {
+									BlastPressure = 0,
+									BlastRadius = 10,
+									DestroyJointRadiusPercent = 1,
+									ExplosionType = "Craters",			
+									},
+		
+		particlelifetime			= .1,
+		
+		firerate					= 8,
+		firewait 					= 0,
+		chargewait					= .5,
+		triggermode 				= "Auto",
+		firemode 					= "SingleShipExplosive",
+		bullettype					= "Ray",
+	},
+-- Assault Weapons
+	["W17"] = {
+		name						= "W17",
+		fullname					= "Assault Rifle",
+		category					= "Assault",
+		description					= "The WIJ Mark 17 Individual Defense and Combat Initiator has proven to be effective under many combat scenarios. It is a highly popular rifle throughout the WIJ forces, as it is very durable. The W17 Assault Rifle is produced on the planet Gorius 5 by GORIUS ARMORIES for the WIJ Corporation.",
+		quickdesc					= "Automatic, Single Shot",		
+		defaultcost					= 0,
+		cost						= 0,
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 1,
+		canaim						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 1.7,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.3,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 10,
+		
+		maxspread					= 2.5,
+		minspread					= .5,
+		readjust					= 2,
+		camerarecoil                = 1.7,
+		recoilrate					= 0.5,
+		maxrecoil					= 18,
+		
+		numshots					= 3,
+		
+		heatrate 					= 2,
+		cooltime 					= 3,	
+		coolwait 					= .3,
+		
+		damage						= 8,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 11,
+		firewait 					= .15,
+		chargewait					= 0,
+		triggermode 				= "Auto",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.5, -0.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			},
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, .3),
+			["Left Arm"]	= CFrame.new(-0.2, 0, 1.3),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-0.5, 0, 0.5)
+		}
+	},
+	["W18"] = {
+		name						= "W18",
+		fullname					= "Combat Rifle",
+		category					= "Assault",
+		description					= "Special operations run by Shock Troopers demanded a more versatile weapon than the W17, therefore it was completely re-designed to produce a shorter-barreled version. The resulting rifle is fitted with an EM scope and a suppressor. This rifle is perfect for Shock Troopers as a soldier can ensure long-range hits and maintain concealment.",
+		quickdesc					= "Automatic, Single Shot, Silenced",
+		defaultcost					= 2000,
+		cost						= 2000,
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 1,
+		canaim						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.3,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 12,
+		
+		maxspread					= 2,
+		minspread					= .25,
+		readjust					= 1.5,
+		camerarecoil                = 1.7,
+		recoilrate					= 0.5,
+		maxrecoil					= 15,
+		
+		numshots					= 3,
+		
+		heatrate 					= 3,
+		cooltime 					= 2,	
+		coolwait 					= 0.3,
+		
+		damage						= 7,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 11,
+		firewait 					= 0.15,
+		chargewait					= 0,
+		triggermode 				= "Auto",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.5, -0.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			},
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, .3),
+			["Left Arm"]	= CFrame.new(-.2, 0, 1.3),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+	["L95"] = {
+		name						= "L95",
+		fullname					= "Light Support Rifle",
+		category					= "Assault",
+		description					= "The Alpharus L95 Light Support Weapon is the ultimate ordinary WIJ weapon for infantry-based area denial. Almost no other weapons are capable of the insane rate of fire this piece is capable of putting out; armed with a drum battery it has the power to continually do this for quite some time.",
+		quickdesc					= "Automatic, Single Shot",		
+		defaultcost					= 2500,
+		cost						= 2500,
+		slot						= 1,	
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 1,
+		canaim						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.3,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 30,
+		
+		maxspread					= 6,
+		minspread					= 0.8,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 0.7,
+		maxrecoil					= 20,
+		
+		numshots					= 3,
+		
+		heatrate 					= 1,
+		cooltime 					= 3,	
+		coolwait 					= 0.5,
+		
+		damage						= 12,
+		calcDamage = function(damage, distance)
+			return math.clamp((damage * (1/(distance/15))), 1, damage)
+			--return damage + distance / 40
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 13,
+		deltafirerate				= 15,
+		firewait 					= 0.15,
+		chargewait					= 0,
+		triggermode 				= "Auto",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.2, -.4) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(-0.2, -0.2, 1),
+			["Left Arm"]	= CFrame.new(0, -0.2, 2),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-0.5, 0, 1)
+		}
+	},
+	["E31"] = {
+		name						= "E31",
+		fullname					= "",		
+		category					= "",
+		description					= "The E31 rifle is a highly experimental electron rifle based on the technology of the MSI. It is a more flexible, rapid firing platform but loses much of the potency of its progenitor rifle. The weapon uses a similar system of subatomic levers to channel a battery's power into an ultra high amperage and voltage electron bolt capable of frying anyone on the receiving end.",
+		quickdesc					= "Charged, Automatic, Single Shot",		
+		defaultcost					= 4500,
+		cost						= 4500,
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 2,
+		canaim						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2.5,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.3,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 10,
+		
+		maxspread					= 1.5,
+		minspread					= 0.5,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 0.5,
+		maxrecoil					= 15,
+		
+		numshots					= 3,
+		
+		heatrate 					= 3,
+		cooltime 					= 3,	
+		coolwait 					= 0.5,
+		
+		damage						= 8,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 3,
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 9,
+		firewait 					= 0,
+		chargewait					= 0.3,
+		triggermode 				= "Auto",
+		firemode 					= "Single",
+		bullettype					= "Streak",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -.6, -.3) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			},
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -2, 0),
+			["Left Arm"]	= CFrame.new(.3, 0, 0),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+	["DUB"] = {
+		name						= "DUB",
+		fullname					= "",		
+		category					= "",
+		description					= "The DUB Rifle is a specialized variant of the E31 experimental electron rifle. Like it's predecessor, the rifle utilizes a system of subatomic levers to channel a battery’s power into an ultra high amperage and voltage electron bolt. This particular variant curiously includes a specialized audio module that will play music.",
+		quickdesc					= "DUB WUB WUB WUB",		
+		defaultcost					= 4500,
+		cost						= 4500,
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 2,
+		canaim						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= true,
+		walkspeedreduce				= 0,
+		equipwait					= 0.3,
+		
+		batterymin 					= 1,
+		batterymax 					= 1,
+		shotsdeplete				= 20,
+		
+		maxspread					= 1.5,
+		minspread					= 0.5,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 0.5,
+		maxrecoil					= 15,
+		
+		numshots					= 3,
+		
+		heatrate 					= 0.1,
+		cooltime 					= 2,	
+		coolwait 					= 0.5,
+		
+		damage						= 0,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 4,
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 20,
+		firewait 					= 0,
+		chargewait					= 0.3,
+		triggermode 				= "Auto",
+		firemode 					= "Single",
+		bullettype					= "Streak",
+		playmusic					= true,
+		starttime					= 7,
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.6, -0.3) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			},
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -2, 0),
+			["Left Arm"]	= CFrame.new(0.3, 0, 0),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-0.5, 0, 1)
+		}
+	},
+	["X11"] = {	
+		name						= "X11",
+		fullname					= "Concentrated Particle Beam",
+		category					= "Assault",
+		description					= "This experimental assault rifle known as a ?pulsed beamer? due to its firing method is one of the latest fancy toys to come out of GORIUS R&D. This weapon uses a specially configured phase coil which emits light phase beams so quickly that the weapon could be mistaken for a sustained beam weapon.",
+		quickdesc					= "Charged fire, Constanst Beam",		
+		defaultcost					= 4000,
+		cost						= 4000,
+		slot						= 1,
+		holster						= "Back",	
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 1.5,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.3,
+		
+		batterymin 					= 5,
+		batterymax 					= 5,
+		shotsdeplete				= 20,
+		
+		maxspread					= 1,
+		minspread					= 0,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 1,
+		maxrecoil					= 25,
+		
+		heatrate 					= 1.6,
+		cooltime 					= 4,
+		coolwait 					= 0.5,
+		
+		damage						= 6,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1.5,
+		
+		particlelifetime			= 0.1,
+		
+		bulletlifetime				= 0.05,
+		bulletlifetime2				= 0.05,
+		
+		firerate					= 3,
+		firewait 					= 0,
+		chargewait					= 0.5,
+		triggermode 				= "Semi",
+		firemode 					= "Constant",
+		bullettype					= "Constant",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(-0.1, -0.75, -0.45) * CFrame.Angles(math.rad(90),0,math.rad(180)),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -0.4, 0),
+			["Left Arm"]	= CFrame.new(0, -0.3, 1),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-0.5, 0, 1)
+		}
+	},
+
+	["X283"] = {	
+		name						= "X283",
+		fullname					= "Concentrated Particle Beams",
+		category					= "Assault",
+		description					= "A modified X11 prototype produced by The Astra Coorporation.",
+		quickdesc					= "Charged fire, Constanst Beams",		
+		defaultcost					= 100000,
+		cost						= 100000,
+		slot						= 1,
+		holster						= "Back",	
+		handles						= 1,
+		barrels						= 4,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= true,
+		walkspeedreduce				= 0,
+		equipwait					= 0.3,
+		
+		batterymin 					= 2,
+		batterymax 					= 4,
+		shotsdeplete				= 25,
+		
+		maxspread					= 1,
+		minspread					= 0,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 1,
+		maxrecoil					= 25,
+		
+		heatrate 					= 1.6,
+		cooltime 					= 4,
+		coolwait 					= 0.5,
+		
+		damage						= 4,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 2,
+		
+		particlelifetime			= 0.1,
+		
+		bulletlifetime				= 0.05,
+		bulletlifetime2				= 0.05,
+		
+		firerate					= 0,
+		firewait 					= 0,
+		chargewait					= 0.5,
+		triggermode 				= "Semi",
+		firemode 					= "Constant",
+		bullettype					= "Constant",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(-0.1, -0.75, -0.45) * CFrame.Angles(math.rad(90),0,math.rad(180)),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -0.4, 0),
+			["Left Arm"]	= CFrame.new(0, -0.3, 1),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-0.5, 0, 1)
+		}
+	},
+
+
+-- Battle Rifles
+	["B67"] = {
+		name						= "B67",
+		fullname					= "Battle Rifle",	
+		category					= "Battle Rifle",
+		description					= "The B67 Battle Rifle is capable of heavy fire and with accuracy of its earlier cousin, the B55, but is equipped with better optics and phase coils permitting it to hit hard and accurately over vast distances.This does mean the burst mode has been removed to accommodate the heavier tech.",
+		quickdesc					= "Semi Automatic, Single Shot",
+		defaultcost					= 1500,
+		cost						= 1500,
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.3,
+		
+		batterymin 					= 2,
+		batterymax 					= 4,
+		shotsdeplete				= 10,
+		
+		maxspread					= 2,
+		minspread					= .25,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 0.25,
+		maxrecoil					= 15,
+		
+		heatrate 					= 4,
+		cooltime 					= 3,	
+		coolwait 					= 0.3,
+		
+		damage						= 10,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 20,
+		firewait 					= 0.12,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0.1,-0.25,-0.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(-0.3, 0, 0.2),
+			["Left Arm"]	= CFrame.new(-0.4, 0, 1.2),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-0.5, 0, 1)
+		}
+	},
+	["B55"] = {
+		name						= "B55",
+		fullname					= "Burst Rifle",
+		category					= "Battle Rifle",
+		description					= "As part of project Blue Armament in the late 190s, YOLTOR proposed this cheap and compact marksman rifle with pinpoint accuracy thanks to its EM optical scope. What the B55 lacks in raw punishing power, it makes up in a battery which lasts nearly forever and a reliability found in few other weapons.",
+		quickdesc					= "Semi Automatic, 3 Shot Burst Fire",	
+		defaultcost					= 500,	
+		cost						= 500,
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.3,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 10,
+		
+		maxspread					= 2,
+		minspread					= 0.75,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 0.5,
+		maxrecoil					= 15,
+		
+		numshots					= 3,
+		
+		heatrate 					= 3,
+		cooltime 					= 3,	
+		coolwait 					= 0.5,
+		
+		damage						= 5,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 20,
+		firewait 					= 0.2,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Burst",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.5, -0.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(-0.1, 0, 0.2),
+			["Left Arm"]	= CFrame.new(-0.2, 0, 1.2),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-0.5, 0, 1)
+		}
+	},
+
+-- Shotguns
+	["T11"] = {
+		name						= "T11",
+		fullname					= "Shotgun",		
+		category					= "Shotgun",
+		description					= "The T11 Tactical Shotgun is a close-in weapon used in breach and clear engagements. The electromagnetic disruption provided by one shot of the T11 equates that of an entire squad firepower and can potentially vaporize a soldier in one shot. However the heavy EM flux used to generate this powerful disruption blast degrades very fast over distance.",
+		quickdesc					= "Semi Automatic, 5 Pellet Shots",
+		defaultcost					= 500,		
+		cost						= 500,
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.3,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 10,
+		
+		maxspread					= 6,
+		minspread					= 4,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 2,
+		maxrecoil					= 25,
+		
+		numshots					= 5,
+		
+		heatrate 					= 4,
+		cooltime 					= 2,	
+		coolwait 					= 1.2,
+		
+		damage						= 100,
+		calcDamage = function(damage, distance)			
+			if distance >= 2 then
+				damage = 25
+				if distance <= 50 then
+					damage = 80 + (0.035 * ((distance-25)^2)) - (1.5375 * distance)
+				end
+			end
+			return damage / 5
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 4,
+		firewait 					= .8,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Shotgun",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.5, -0.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, 0),
+			["Left Arm"]	= CFrame.new(0, -0.1, 1),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-0.5, 0, 1)
+		}
+	},
+	["T21"] = {
+		name						= "T21",
+		fullname					= "Automatic Shotgun",		
+		category					= "Shotgun",
+		description					= "The T21 Automatic Shotgun is a variant of the T11. This model trades a heavy disruption coil for a lighter, more rapid fire model backed up by a drum-magazine battery. This allows close quarters combatants to keep up the pressure during their engagements.",
+		quickdesc 					= "Automatic, 5 Pellet Shots",		
+		defaultcost					= 1900,
+		cost						= 1900,
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.3,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 10,
+		
+		maxspread					= 25,
+		minspread					= 4,
+		readjust					= 3,
+		camerarecoil                = 1,
+		recoilrate					= 3,
+		maxrecoil					= 30,
+		
+		numshots					= 4,
+		
+		heatrate 					= 3.5,
+		cooltime 					= 2.5,	
+		coolwait 					= 0.5,
+		
+		damage						= 10,
+		calcDamage = function(damage, distance)
+			if distance <= 50 then
+				damage = 10 + (0.015 * ((distance - 50)^2)) - (0.18 * distance) 
+			end			
+			return damage / 3
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 4,
+		firewait 					= 0.5,
+		chargewait					= 0,
+		triggermode 				= "Auto",
+		firemode 					= "Shotgun",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0,0,0) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, 0),
+			["Left Arm"]	= CFrame.new(0, 0, 2),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+	["BUGSPRAY"] = {
+		name						= "BUGSPRAY",
+		fullname					= "WSW-1 BugSpray",		
+		category					= "Shotgun",
+		description					= "The West Systems Weaponry-1 BugSpray is a automatic shotgun utilized by the Federation. A few of these models were acquired by Alliance operatives and later reverse-engineered for limited distribution. Heavy modifications were made to the BugSpray to keep it in line with the rest of the Alliance arsenal; a standard issue T21 phaser disruption coil in lieu of traditional shotgun pellets, and the underside grenade launcher removed to make space for it.",
+		quickdesc					= "Full Automatic, 5 pellet shots",
+		defaultcost					= 2200,		
+		cost						= 2200,
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.3,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 10,
+		
+		maxspread					= 10,
+		minspread					= 5,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 2,
+		maxrecoil					= 30,
+		
+		numshots					= 5,
+		
+		heatrate 					= 2.5,
+		cooltime 					= 2,	
+		coolwait 					= 1.5,
+		
+		damage						= 90,
+		calcDamage = function(damage, distance)			
+			if distance >= 2 then
+				damage = 20
+				if distance <= 50 then
+					damage = 55 + (0.035 * ((distance-25)^2)) - (1.5375 * distance)
+				end
+			end
+			return damage / 5
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 4,
+		firewait 					= 0.4,
+		chargewait					= 0,
+		triggermode 				= "Auto",
+		firemode 					= "Shotgun",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.5, -0.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, 0),
+			["Left Arm"]	= CFrame.new(0, -0.1, 1),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-0.5, 0, 1)
+		}
+	},
+
+-- Marksman	
+	["S13"] = {
+		name						= "S13",
+		fullname					= "Marksman Rifle",
+		category					= "Marksman",
+		description					= "The Sigma-13 Sniper Rifle is the lighter cousin of the more popularly known SUF. While lacking the direct punch of the SUF, the S13 fires more quickly, is more readily available to WIJ forces and maintains the pinpoint accuracy of its larger variant.",
+		quickdesc					= "Semi Automatic, Single Shot",	
+		defaultcost					= 1000,		
+		cost						= 1000,
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 1,
+		equipwait					= 0.3,
+		
+		batterymin 					= 3,
+		batterymax 					= 3,
+		shotsdeplete				= 1,
+		
+		maxspread					= 2,
+		minspread					= 0,
+		readjust					= 2,
+		camerarecoil                = 5,
+		recoilrate					= 1,
+		maxrecoil					= 18,
+		
+		heatrate 					= 30,
+		cooltime 					= 2,	
+		coolwait 					= 1,
+		
+		damage						= 30,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 20,
+		firewait 					= .6,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0.1, -.5, -0.35) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, 0.4),
+			["Left Arm"]	= CFrame.new(-0.2, 0, 1.2),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-0.5, 0, 1)
+		}
+	},
+	["SUF"] = {	
+		name						= "SUF",
+		fullname					= "Sniper Rifle",
+		category					= "Marksman",
+		description					= "The Sigma ?Ultimate Force? Sniper Rifle is the definition of long-range elimination in the WIJ arsenal. It boasts a formidable weapons discharge capable of killing or vaporizing a target several kilometers away and is virtually unable to miss the spot it is fired at.",
+		quickdesc					= "Semi Automatic, Single Shot",	
+		defaultcost					= 2700,	
+		cost						= 2700,
+		slot						= 1,
+		holster						= "Back",	
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 1.3,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.3,
+		
+		batterymin 					= 5,
+		batterymax 					= 5,
+		shotsdeplete				= 1,
+		
+		maxspread					= 1,
+		minspread					= 0,
+		readjust					= 2,
+		camerarecoil                = 5,
+		recoilrate					= 1,
+		maxrecoil					= 15,
+		
+		heatrate 					= 50,
+		cooltime 					= 4,
+		coolwait 					= 1.25,
+			
+		damage						= 60,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 3,
+		firewait 					= 1,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(-0.1, -.75, -0.45) * CFrame.Angles(math.rad(90),0,math.rad(180)),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -.5, .3),
+			["Left Arm"]	= CFrame.new(0, -.3, 1.4),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+	["MSI"] = {	
+		name						= "MSI",
+		fullname 					= "Magnetic Induction Rifle",
+		category					= "Marksman",
+		description					= "The Magnetic Surge Inductor rifle is the man-mobile form of an especially frightening weapons platform cooked up by an elite conference of WIJ?s top scientists. The weapon uses a system of subatomic levers to channel a power pack?s energy into a near impossibly high amperage and voltage electron bolt which arcs across from the rifle into any unsuspecting victim.",
+		quickdesc					= "Single Charged Shot",	
+		defaultcost					= 6000,		
+		cost						= 6000,
+		slot						= 1,
+		holster						= "Back",	
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 2,
+		equipwait					= 0.3,
+		
+		batterymin 					= 10,
+		batterymax 					= 10,
+		shotsdeplete				= 1,
+		
+		maxspread					= 0,
+		minspread					= 0,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 1,
+		maxrecoil					= 25,
+		
+		heatrate 					= 100,
+		cooltime 					= 4,
+		coolwait 					= 1,
+			
+		damage						= 90,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 2,
+		
+		particlelifetime			= .2,
+		
+		firerate					= 3,
+		firewait 					= 1,
+		chargewait					= .15,
+		triggermode 				= "Semi",
+		firemode 					= "Single",
+		bullettype					= "Streak",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(-0.1, -.75, -0.45) * CFrame.Angles(math.rad(90),0,math.rad(180)),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -.5, -.2),
+			["Left Arm"]	= CFrame.new(0, -.3, 1.3),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+	["PBW"] = {	
+		name						= "PBW",
+		category					= "Marksman",
+		description					= "This is an exceptionally bizarre weapon and a very recent addition to the WIJ arsenal.The Plasma Bow consists of a compound bow frame fitted with a plasma generator and sights. Pulling back the charged string causes a reaction that literally synthesizes a forcefield-encased plasma bolt between the fingers of the user.",
+		quickdesc					= "Charged Single Projectile",	
+		defaultcost					= 3400,		
+		cost						= 3400,
+		slot						= 1,
+		holster						= "Back",	
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.2,
+		
+		batterymin 					= 2.5,
+		batterymax 					= 2.5,
+		shotsdeplete				= 1,
+		
+		maxspread					= 1,
+		minspread					= 1,
+		readjust					= 1,
+		camerarecoil                = 1,
+		recoilrate					= 1,
+		maxrecoil					= 1,
+		
+		heatrate 					= 100,
+		cooltime 					= 0.75,
+		coolwait 					= 1,
+		
+		particlelifetime			= 0.2,
+		
+		firerate					= 0,
+		firewait 					= 0.75,
+		chargewait					= 0.5,
+		triggermode 				= "Semi",
+		firemode 					= "Launcher",
+		bullettype					= "Projectile",
+		
+		damage						= 35,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 2,
+		
+		explosion					= {
+									BlastRadius = 10,	
+		},
+		projectile					= {
+									KillTime = 3,
+									Speed = 8,
+									Force = 90,
+									EffectWait = 0,
+									Gravity = -3,
+									WaitAfterEffect = .3
+		},
+		
+		handlewelds 				= {
+			{	limb = "Left Arm",
+				C0 = CFrame.new(.25, -0.75, 0) * CFrame.Angles(math.rad(-90), math.rad(-100), 0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, 0),
+			["Left Arm"]	= CFrame.new(0, -.3, 1),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},	
+
+-- Heavy
+	["G25"] = {	
+		name						= "G25",
+		fullname					= "Plasma Grenade Launcher",		
+		category					= "Assault",
+		description					= "The G25 Triggered Grenade Launcher is unlike all other weapons in WIJ's arsenal due to it firing a charged particle as opposed to a directed phaser. The weapon is renowned for being particularly tricky to use however those familiar with its nature can tap into its lethal nature by laying traps and disrupting the movement of enemy units.",
+		quickdesc					= "Single Explosive Projectile",
+		defaultcost					= 3000,
+		cost						= 3000,
+		slot						= 1,
+		holster						= "Back",	
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 2,
+		equipwait					= 0.3,
+		
+		batterymin 					= 12.5,
+		batterymax 					= 12.5,
+		shotsdeplete				= 1,
+		
+		maxspread					= 1,
+		minspread					= 1,
+		readjust					= 1,
+		camerarecoil                = 1,
+		recoilrate					= 1,
+		maxrecoil					= 1,
+		
+		heatrate 					= 100,
+		cooltime 					= 4,
+		coolwait 					= 1,
+		
+		particlelifetime			= .2,
+		
+		firerate					= 0,
+		firewait 					= 1.5,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Launcher",
+		bullettype					= "Projectile",
+		func						= "Grenade",
+		
+		damage						= 50,
+		calcDamage = function(damage, distance)
+			damage = damage + (60 /distance)
+			return math.clamp(damage, 50,75)
+		end,
+		vehiclemultiplier			= 10,
+		
+		explosion					= {
+									BlastPressure = 0,
+									BlastRadius = 20,
+									DestroyJointRadiusPercent = 1,
+									ExplosionType = "Craters",			
+		},
+		projectile					= {
+									KillTime = 4,
+									Speed = 3.5,
+									Force = 80,
+									EffectWait = 1,
+									Gravity = -32.2,
+									WaitAfterEffect = .3,
+		},
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -.25, -.5) * CFrame.Angles(math.rad(90),0,math.rad(180)),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -.4, .5),
+			["Left Arm"]	= CFrame.new(0, -.3, 1.7),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+	["C25"] = {	
+		name						= "C25",
+		fullname					= "Plasma Grenade Launcher",		
+		category					= "Assault",
+		description					= "It shoot's C0S's. Maybe.",
+		quickdesc					= "Single Constant damage Projectile",
+		defaultcost					= 3000,
+		cost						= 3000,
+		slot						= 1,
+		holster						= "Back",	
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= true,
+		walkspeedreduce				= 2,
+		equipwait					= 0.3,
+		
+		batterymin 					= 3,
+		batterymax 					= 5,
+		shotsdeplete				= 1,
+		
+		maxspread					= 2,
+		minspread					= 4,
+		readjust					= 1,
+		camerarecoil                = 1,
+		recoilrate					= 1,
+		maxrecoil					= 1,
+		
+		heatrate 					= 2,
+		cooltime 					= 2,
+		coolwait 					= 1,
+		
+		particlelifetime			= .2,
+		
+		firerate					= .2,
+		firewait 					= 3,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Launcher",
+		bullettype					= "Projectile",
+		func						= "ConstantDamage",
+		
+		damage						= 2,
+		calcDamage = function(damage, distance)
+			return math.clamp(damage + (10 * (1 / distance)), 1, 15)
+		end,
+		vehiclemultiplier			= .5,
+		
+		size						= 25,
+		decreasesize				= true,
+		
+		projectile					= {
+									KillTime = 5,
+									Speed = 2.5,
+									Force = 50,
+									EffectWait = 5,
+									WaitAfterEffect = 0.2,
+									Gravity = -25
+		},
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -.25, -.5) * CFrame.Angles(math.rad(90),0,math.rad(180)),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -.4, .5),
+			["Left Arm"]	= CFrame.new(0, -.3, 1.7),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+	["C25X"] = {	
+		name						= "C25",
+		fullname					= "Plasma Grenade Launcher",		
+		category					= "Assault",
+		description					= "It shoot's C0S's. Maybe.",
+		quickdesc					= "Single Explosive Projectile",
+		defaultcost					= 3000,
+		cost						= 3000,
+		slot						= 1,
+		holster						= "Back",	
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= true,
+		walkspeedreduce				= 2,
+		equipwait					= 0.3,
+		
+		batterymin 					= 0,
+		batterymax 					= 0,
+		shotsdeplete				= 1,
+		
+		maxspread					= 0,
+		minspread					= 0,
+		readjust					= 1,
+		camerarecoil                = 1,
+		recoilrate					= 1,
+		maxrecoil					= 1,
+		
+		heatrate 					= 2,
+		cooltime 					= 2,
+		coolwait 					= 1,
+		
+		particlelifetime			= .2,
+		
+		firerate					= 0,
+		firewait 					= .1,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Launcher",
+		bullettype					= "Projectile",
+		func						= "ConstantDamage",
+		
+		damage						= 1,
+		calcDamage = function(damage, distance)
+			return math.clamp(damage + (20 * (1 / distance)), 1, 25)
+		end,
+		vehiclemultiplier			= 10,
+		
+		size						= 25,
+		decreasesize				= true,
+		
+		projectile					= {
+									KillTime = 5,
+									Speed = 2.5,
+									Force = 50,
+									EffectWait = 5,
+									WaitAfterEffect = 0.2,
+									Gravity = -25
+		},
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -.25, -.5) * CFrame.Angles(math.rad(90),0,math.rad(180)),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -.4, .5),
+			["Left Arm"]	= CFrame.new(0, -.3, 1.7),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+	["AT"] = {	
+		name						= "AT",
+		fullname					= "Anti-Armor Charged Phaser",		
+		category					= "Explosive",
+		description					= "When it comes to dispatching armor on foot, the AT Anti-Armor Phaser is the solution. With the increasing use of armored units by hostile forces against WIJ strongholds, the use of the AT Anti-Armor Phaser has grown. Hundreds of these weapons were airdropped into CASTLE Cobalt during the great siege of the last century.",
+		quickdesc					= "Charged Shot",	
+		defaultcost					= 3750,	
+		cost						= 3750,
+		slot						= 1,
+		holster						= "Back",	
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canmelee					= false,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 3,
+		equipwait					= 0.4,
+		
+		batterymin 					= 20,
+		batterymax 					= 20,
+		shotsdeplete				= 1,
+		
+		maxspread					= 2,
+		minspread					= 1,
+		readjust					= 2,
+		camerarecoil                = 7,
+		recoilrate					= 1,
+		maxrecoil					= 25,
+		
+		heatrate 					= 100,
+		cooltime 					= 3,
+		coolwait 					= 0,
+			
+		damage						= 50,
+		calcDamage = function(damage, distance)
+			return damage + (50 * (1/distance))
+		end,
+		vehiclemultiplier			= 30,		
+		
+		explosion					= {
+									BlastPressure = 0,
+									BlastRadius = 30,
+									DestroyJointRadiusPercent = 1,
+									ExplosionType = "Craters",			
+									},
+		
+		particlelifetime			= .1,
+		
+		firerate					= 3,
+		firewait 					= 3,
+		chargewait					= 4,
+		triggermode 				= "Semi",
+		firemode 					= "SingleExplosive",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(.5, -1, -1.25) * CFrame.Angles(math.rad(0),0,math.rad(180)),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, .4, 1),
+			["Left Arm"]	= CFrame.new(.3, 1, 1),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+	["R87"] = {	
+		name						= "R87",
+		fullname					= "Charged Railgun",		
+		category					= "Explosive",
+		description					= "The HilTech Type 87 Heavy Assault Rifle is classified as a 'Charged Railgun' which fires ultra-high intensity phaser bolts at its target. The bolts explode on impact with the surface they hit, and due to their higher energy yield can pierce through cover, hitting any unfortunate enemy that is directly behind said cover.",
+		quickdesc					= "Semi Automatic, Single Explosise Beam",	
+		defaultcost					= 5000,	
+		cost						= 5000,
+		slot						= 1,
+		holster						= "Back",	
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.3,
+		
+		batterymin 					= 3,
+		batterymax 					= 4,
+		shotsdeplete				= 1,
+		
+		maxspread					= 2,
+		minspread					= 1,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 1,
+		maxrecoil					= 25,
+		
+		heatrate 					= 35,
+		cooltime 					= 4,
+		coolwait 					= 0,
+			
+		vehiclemultiplier			= 10,		
+		damage						= 20,
+		calcDamage = function(damage, distance)
+			damage = damage + (10 * (1/(distance/3)))
+			return math.clamp(damage, 20, 35)
+		end,
+		
+		explosion					= {
+									BlastPressure = 0,
+									BlastRadius = 10,
+									DestroyJointRadiusPercent = 1,
+									ExplosionType = "Craters",			
+									},
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 3,
+		firewait 					= 0.7,
+		chargewait					= 0,
+		triggermode 				= "Auto",
+		firemode 					= "SingleExplosive",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.75, -0.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			},
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -.2, .3),
+			["Left Arm"]	= CFrame.new(0, -.2, 1.2),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+	["REX87"] = {	
+		name						= "REX87",
+		fullname					= "Charged Railgun",		
+		category					= "Explosive",
+		description					= "It was supposed to be a joke. Then everything went wrong.",
+		quickdesc					= "Semi Automatic, Single Explosise Beam",	
+		defaultcost					= 5000,	
+		cost						= 5000,
+		slot						= 1,
+		holster						= "Back",	
+		handles						= 1,
+		barrels						= 3,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= true,
+		walkspeedreduce				= 5,
+		equipwait					= 0.5,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 150,
+		
+		maxspread					= 1,
+		minspread					= .5,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= .5,
+		maxrecoil					= 15,
+		
+		numshots					= 3,
+		
+		heatrate 					= .75,
+		cooltime 					= 8,	
+		coolwait 					= .3,
+			
+		damage						= 20,
+		vehiclemultiplier			= 500,		
+		
+		calcDamage = function(damage, distance)
+			damage = damage + (10 * (1/(distance/3)))
+			return math.clamp(damage, 20, 35)
+		end,
+		
+		explosion					= {
+									BlastPressure = 0,
+									BlastRadius = 10,
+									DestroyJointRadiusPercent = 1,
+									ExplosionType = "Craters",			
+									},
+		
+		particlelifetime			= .1,
+		
+		firerate					= 15,
+		firewait 					= 0,
+		chargewait					= .5,
+		triggermode 				= "Auto",
+		firemode 					= "SingleExplosive",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(.25, -2, -1.25) * CFrame.Angles(math.rad(-135),math.rad(180),0),
+				C1 = CFrame.new()
+			},
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -2, 0),
+			["Left Arm"]	= CFrame.new(.3, 0, 0),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+	["F99"] = {
+		name						= "F99",
+		fullname					= "Plasma Thrower",		
+		category					= "Melee",
+		description					= "The F99 flamethrower is a very bulky and unwieldy weapon, but one which carries great destructive power. Capable of firing forth a stream of critical temperature plasma at close range, any targets which are caught in the fire will find themselves quickly and assuredly roasted, completely vaporizing the target at worst.",
+		quickdesc					= "Close quarters, constant area damage",	
+		defaultcost					= 1750,	
+		cost						= 1750,
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 3,
+		canaim						= false,
+		cansprint 					= false,
+		cancrouch 					= false,
+		canmelee					= false,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.5,
+		
+		batterymin 					= 4,
+		batterymax 					= 5,
+		shotsdeplete				= 4,
+		
+		maxspread					= 1,
+		minspread					= 0.5,
+		readjust					= 2,
+		camerarecoil                = 0,
+		recoilrate					= 0.5,
+		maxrecoil					= 15,
+		
+		numshots					= 3,
+		
+		heatrate 					= 2,
+		cooltime 					= 6,	
+		coolwait 					= 1,
+		
+		damage						= 15,
+		calcDamage = function(damage, distance)
+			damage = damage --+ (10 * (1/(distance*2)))
+			return math.clamp(damage, 7, 50)
+		end,
+		vehiclemultiplier			= 4,		
+		
+		explosion					= {
+									BlastRadius = 7			
+		},
+		
+		particlelifetime			= 9.1,
+		
+		firerate					= 10,
+		firewait 					= 0.25,
+		chargewait					= 0,
+		triggermode 				= "Auto",
+		firemode 					= "Flame",
+		bullettype					= "Flame",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(.25, -2, -1.25) * CFrame.Angles(math.rad(-135),math.rad(180),0),
+				C1 = CFrame.new()
+			},
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -2, 0),
+			["Left Arm"]	= CFrame.new(.3, 0, 0),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},	
+	["REX"] = {
+		name						= "REX",
+		fullname					= "Rapid Phaser Minigun",		
+		category					= "Restricted",
+		description					= "The REX is a high powered mini-gun capable of both legendary fire rate and damage against targets. Only a small number of these miniguns exist in the hands of HICOM councillors and bodyguards, due to the exorbitant cost of the starship-grade technology used ( the REX is in essence a point defense phaser downsized to be carried by a trooper) and the fact the science to build these beastly miniguns is known to only a few specific manufacturing personnel at any given time.",
+		quickdesc					= "Automatic, Single Shot",		
+		defaultcost					= 150000,
+		cost						= 150000,
+
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 3,
+		canaim						= false,
+		cansprint 					= false,
+		cancrouch 					= false,
+		canmelee					= false,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 5,
+		equipwait					= 0.5,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 15,
+		
+		maxspread					= 1,
+		minspread					= .7,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= .5,
+		maxrecoil					= 15,
+		
+		numshots					= 3,
+		
+		heatrate 					= 0.75,
+		cooltime 					= 7,	
+		coolwait 					= 0.3,
+		
+		damage						= 7,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 6,
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 13,
+		firewait 					= 0,
+		chargewait					= .5,
+		triggermode 				= "Auto",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(.25, -2, -1.25) * CFrame.Angles(math.rad(-135),math.rad(180),0),
+				C1 = CFrame.new()
+			},
+		},
+		
+		explosion					= {
+							BlastPressure = 0,
+							BlastRadius = 10,
+							DestroyJointRadiusPercent = 1,
+							ExplosionType = "Craters",			
+		},
+				
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -2, 0),
+			["Left Arm"]	= CFrame.new(.3, 0, 0),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+
+-- Handgun
+	["TAZ"] = {
+		name						= "TAZ",
+		fullname					= "Shield tazer",
+		category					= "Handgun",
+		description					= "",
+		quickdesc					= "",
+		defaultcost					= 0,		
+		cost						= 0,
+		slot						= 2,
+		holster						= "Hip",
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= false,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= true,
+		walkspeedreduce				= 0,
+		equipwait					= 0.1,
+		func						= "ShieldRestrain",
+		
+		batterymin 					= 10,
+		batterymax 					= 15,
+		shotsdeplete				= 10,
+		
+		maxspread					= 1,
+		minspread					= 1,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 1,
+		maxrecoil					= 12,
+		
+		numshots					= 1,
+		
+		heatrate 					= 100,
+		cooltime 					= 3,	
+		coolwait 					= .5,
+		
+		damage						= 9,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 1,
+		firewait 					= 1,
+		chargewait					= .5,
+		triggermode 				= "Semi",
+		firemode 					= "Launcher",
+		bullettype					= "Projectile",
+		
+		projectile					= {
+									KillTime = .3,
+									Speed = 2,
+									Force = 90,
+									EffectWait = .1,
+									Gravity = -3,
+									WaitAfterEffect = 0
+		},
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0,-.5,-.25) * CFrame.Angles(math.rad(-90),0,0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, -.3),
+			["Left Arm"]	= CFrame.new(0, -.2, 0),
+			["Right Shoulder"]	= CFrame.new(2, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-1.5, 0, 0)
+		}
+	},
+	["Y14"] = {
+		name						= "Y14",
+		fullname					= "Phaser Pistol",
+		category					= "Handgun",
+		description					= "The YOLTOR no. 14 phaser pistol is the standard-issue sidearm issued to all WIJ forces with a history dating back to the conception of the alliance. With a highly efficient energy converter and easy handling, the Y14 serves well in any combat situation. The Y14 is widely considered the best sidearm on the market today.",
+		quickdesc					= "Semi Automatic, Single Shot",	
+		defaultcost					= 0,	
+		cost						= 0,
+		slot						= 2,
+		holster						= "Hip",
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 1.6,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.1,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 10,
+		
+		maxspread					= 2.5,
+		minspread					= .5,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 0.5,
+		maxrecoil					= 15,
+		
+		numshots					= 1,
+		
+		heatrate 					= 5,
+		cooltime 					= 1.5,	
+		coolwait 					= 1,
+		
+		damage						= 8,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 15,
+		firewait 					= 0.135,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0,-.5,-.25) * CFrame.Angles(math.rad(-90),0,0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, -.3),
+			["Left Arm"]	= CFrame.new(0, -.2, 0),
+			["Right Shoulder"]	= CFrame.new(2, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-1.5, 0, 0)
+		}
+	},
+	["2XY14"] = {
+		name						= "2XY14",
+		fullname					= "Dual Wielded Phaser Pistols",
+		category					= "Handgun",
+		description					= "When one Y14 is insufficient for mission requirements,officers and specialist forces such as the Shock Troopers are trained in the dual wielding of many of WIJ?s lighter infantry weapons. Being able to synchronize the fire of two weapons allows a trooper to put out twice the hurt he normally would be able to.",
+		quickdesc					= "Semi Automatic, Single Shot",	
+		defaultcost					= 1250,	
+		cost						= 1250,
+		slot						= 2,
+		holster						= "Hip",
+		handles						= 2,
+		barrels						= 2,
+		canaim 						= false,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 2,
+		equipwait					= 0.1,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 20,
+		
+		maxspread					= 11,
+		minspread					= .5,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 1,
+		maxrecoil					= 20,
+		
+		numshots					= 5,
+		
+		heatrate 					= 3,
+		cooltime 					= 4,	
+		coolwait 					= .5,
+		
+		damage						= 8,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 12,
+		firewait 					= .1,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -1, -.15) * CFrame.Angles(math.rad(-90),0,0),
+				C1 = CFrame.new()
+			},
+			{	limb = "Left Arm",
+				C0 = CFrame.new(0, -1, -.15) * CFrame.Angles(math.rad(-90),0,0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, 0),
+			["Left Arm"]	= CFrame.new(0, 0, 0),
+			["Right Shoulder"]	= CFrame.new(2, 0, 1.5),
+			["Left Shoulder"]	= CFrame.new(-2, 0, 1.5)
+		}
+	},
+	["Y14[S]"] = {
+		name						= "Y14[S]",
+		fullname					= "Silenced Phaser Pistol",		
+		category					= "Handgun",
+		description					= "The Y14[S] is quite simply a Y14 fitted with the necessary additional gear to make it a welcome special ops weapon. A silencer mounted to the gun serves the dual purpose of dampening noise and reducing the flash of the phaser beam, making it very difficult to track. EM optics attached allow for more accurate fire to be sent down range.",
+		quickdesc					= "Semi Automatic, Single Shot, Silenced",
+		defaultcost					= 1000,
+		cost						= 1000,
+		slot						= 2,
+		holster						= "Hip",
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.1,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 10,
+		
+		maxspread					= 2,
+		minspread					= 0.25,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 0.5,
+		maxrecoil					= 15,
+		
+		numshots					= 5,
+		
+		heatrate 					= 4,
+		cooltime 					= 3,	
+		coolwait 					= 0.5,
+		
+		damage						= 9,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 20,
+		firewait 					= 0.1,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0,-.5,-.25) * CFrame.Angles(math.rad(-90),0,0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, -.3),
+			["Left Arm"]	= CFrame.new(0, -.2, 0),
+			["Right Shoulder"]	= CFrame.new(2, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-1.5, 0, 0)
+		}
+	},
+	["Y16"] = {
+		name						= "Y16",
+		fullname					= "Automatic Phaser Pistol",		
+		category					= "Handgun",
+		description					= "The YOLTOR no. 16 is a weighty weapon as far as sidearms are concerned. While the technology in this pistol is often ridiculed by its competitors as unreliable and inefficient, and often troops will favor its older cousin the Y14, the Y16 has an advantage over any other WIJ pistol in that it fires automatically, much like many WIJ assault rifles.",
+		quickdesc					= "Automatic, Single Shot",		
+		defaultcost					= 750,
+		cost						= 750,
+		slot						= 2,
+		holster						= "Hip",
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.1,
+		
+		batterymin 					= 3,
+		batterymax 					= 4,
+		shotsdeplete				= 10,
+		
+		maxspread					= 3,
+		minspread					= .5,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 0.5,
+		maxrecoil					= 18,
+		
+		numshots					= 5,
+		
+		heatrate 					= 4,
+		cooltime 					= 3,	
+		coolwait 					= .5,
+		
+		damage						= 6,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 10,
+		firewait 					= .125,
+		chargewait					= 0,
+		triggermode 				= "Auto",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0,-.5,-.25) * CFrame.Angles(math.rad(-90),0,0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, -.3),
+			["Left Arm"]	= CFrame.new(0, -.2, 0),
+			["Right Shoulder"]	= CFrame.new(2, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-1.5, 0, 0)
+		}
+	},
+	["2XY16"] = {
+		name						= "2XY16",
+		fullname					= "Dual Wielded Automatic Phaser Pistols",
+		category					= "Handgun",
+		description					= "When one Y16  is insufficient for mission requirements,officers and specialist forces such as the Shock Troopers are trained in the dual wielding of many of WIJ?s lighter infantry weapons. Being able to synchronize the fire of two weapons allows a trooper to put out twice the hurt he normally would be able to.",
+		quickdesc					= "Automatic, Single Shot",	
+		defaultcost					= 2000,	
+		cost						= 2000,
+		slot						= 2,
+		holster						= "Hip",
+		handles						= 2,
+		barrels						= 2,
+		canaim 						= false,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 2,
+		equipwait					= 0.1,
+		
+		batterymin 					= 3,
+		batterymax 					= 4,
+		shotsdeplete				= 20,
+		
+		maxspread					= 4,
+		minspread					= 1,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 1,
+		maxrecoil					= 23,
+		
+		numshots					= 5,
+		
+		heatrate 					= 2,
+		cooltime 					= 3,	
+		coolwait 					= .5,
+		
+		damage						= 5,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 15,
+		firewait 					= .1,
+		chargewait					= 0,
+		triggermode 				= "Auto",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0,-.5,-.25) * CFrame.Angles(math.rad(-90),0,0),
+				C1 = CFrame.new()
+			},
+			{	limb = "Left Arm",
+				C0 = CFrame.new(0,-.5,-.25) * CFrame.Angles(math.rad(-90),0,0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, 0),
+			["Left Arm"]	= CFrame.new(0, 0, 0),
+			["Right Shoulder"]	= CFrame.new(2, 0, 1.5),
+			["Left Shoulder"]	= CFrame.new(-2, 0, 1.5)
+		}
+	},
+	["C22"] = {
+		name						= "C22",
+		fullname					= "Dual Wielded HandCannons",		
+		category					= "Handgun",
+		description					= "The C22 'lockphaser', a calling back to the bullet based projectile weapons of old, is a simple yet elegant piece capable of putting clean holes in its targets, the gun itself infamous for its special cocking mechanism which must be primed to prepare the phase coil for firing each time.",
+		quickdesc					= "Semi Automatic, 4 Pellet Shots",	
+		defaultcost					= 4000,	
+		cost						= 4000,
+		slot						= 2,
+		holster						= "Hip",
+		handles						= 2,
+		barrels						= 2,
+		canaim 						= false,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 2,
+		equipwait					= 0.1,
+		
+		batterymin 					= 4,
+		batterymax 					= 6,
+		shotsdeplete				= 10,
+		
+		maxspread					= 5,
+		minspread					= 4,
+		readjust					= 2,
+		camerarecoil                = 2,
+		recoilrate					= 1,
+		maxrecoil					= 25,
+		
+		numshots					= 4,
+		
+		heatrate 					= 7,
+		cooltime 					= 2,	
+		coolwait 					= .5,
+		
+		damage						= 5,
+		calcDamage = function(damage, distance)
+			if distance<=20 then
+				damage=15+(80*(1/distance+.6))
+				damage=damage/4.5
+			end			
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 4,
+		firewait 					= .35,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Shotgun",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -.35, -.4) * CFrame.Angles(0,0,math.rad(180)),
+				C1 = CFrame.new()
+			},
+			{	limb = "Left Arm",
+				C0 = CFrame.new(0, -.35, -.4) * CFrame.Angles(0,0,math.rad(180)),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, .5, .2),
+			["Left Arm"]	= CFrame.new(0, .5, .2),
+			["Right Shoulder"]	= CFrame.new(2, 0, 1.5),
+			["Left Shoulder"]	= CFrame.new(-2, 0, 1.5)
+		}
+	},
+	["H23"] = {
+		name						= "H23",
+		fullname					= "Revolver",		
+		category					= "Handgun",
+		description					= "The HilTech Type-23 Revolver is a heavy duty phaser pistol favored among border worlds enforcement agencies and criminal forces alike. Shot per shot the phase coils in the H23 are heavier than its YOLTOR competitors, capable of putting out the pain where it counts. The H23 is a bit more unwieldy than its competitors however.",
+		quickdesc					= "Semi Automatic, Single Shot",
+		defaultcost					= 1250,		
+		cost						= 1250,
+		slot						= 2,
+		holster						= "Hip",
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.1,
+		
+		batterymin 					= 4,
+		batterymax 					= 5,
+		shotsdeplete				= 10,
+		
+		maxspread					= 1,
+		minspread					= .5,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 1.5,
+		maxrecoil					= 15,
+		
+		numshots					= 5,
+		
+		heatrate 					= 10,
+		cooltime 					= 3,	
+		coolwait 					= .5,
+		
+		damage						= 13,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 10,
+		firewait 					= .2,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -1.15, 0) * CFrame.Angles(math.rad(-90),0,0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, -.3),
+			["Left Arm"]	= CFrame.new(0, 0, 0),
+			["Right Shoulder"]	= CFrame.new(2, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-1.5, 0, 0)
+		}
+	},
+	["2XH23"] = {
+		name						= "2XH23",
+		fullname					= "Dual Wielded Revolvers",		
+		category					= "Handgun",
+		description					= "When one H23 is insufficient for mission requirements, officers and specialist forces such as the Shock Troopers are trained in the dual wielding of many of WIJ?s lighter infantry weapons. Being able to synchronize the fire of two weapons allows a trooper to put out twice the hurt he normally would be able to.",
+		quickdesc 					= "Semi Automatic, Single Shot",
+		defaultcost					= 3000,
+		cost						= 3000,
+		slot						= 2,
+		holster						= "Hip",
+		handles						= 2,
+		barrels						= 2,
+		canaim 						= false,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 2,
+		equipwait					= 0.1,
+		
+		batterymin 					= 4,
+		batterymax 					= 5,
+		shotsdeplete				= 20,
+		
+		maxspread					= 1.5,
+		minspread					= 0.75,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 1.5,
+		maxrecoil					= 20,
+		
+		numshots					= 5,
+		
+		heatrate 					= 5,
+		cooltime 					= 4,	
+		coolwait 					= .5,
+		
+		damage						= 13,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 20,
+		firewait 					= .15,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -1.15, 0) * CFrame.Angles(math.rad(-90),0,0),
+				C1 = CFrame.new()
+			},
+			{	limb = "Left Arm",
+				C0 = CFrame.new(0, -1.15, 0) * CFrame.Angles(math.rad(-90),0,0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, 0),
+			["Left Arm"]	= CFrame.new(0, 0, 0),
+			["Right Shoulder"]	= CFrame.new(2, 0, 1.5),
+			["Left Shoulder"]	= CFrame.new(-2, 0, 1.5)
+		}
+	},
+
+-- SMG
+	["SKP"] = {
+		name						= "SKP",
+		fullname					= "Autophaser",		
+		category					= "SMG",
+		description					= "Manufactured by GORIUS Armories, The SKPa (StarKnight Photon accelerator), named SKP for convenience is an autophaser with a high fire rate and respectable damage in a compact and stylish package. SKP makes up for what it lacks in accuracy with a devastating rate of fire.",
+		quickdesc					= "Automatic, Single Shot",		
+		defaultcost					= 1500,
+		cost						= 1500,
+		slot						= 2,
+		holster						= "Hip",
+		handles						= 1,
+		barrels						= 1,
+		canaim						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.2,
+		
+		batterymin 					= 4,
+		batterymax 					= 5,
+		shotsdeplete				= 10,
+		
+		maxspread					= 2,
+		minspread					= .5,
+		readjust					= 2,
+		camerarecoil                = 1.5,
+		recoilrate					= 1.5,
+		maxrecoil					= 20,
+		
+		numshots					= 3,
+		
+		heatrate 					= 3,
+		cooltime 					= 3,	
+		coolwait 					= .3,
+		
+		damage						= 4,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 14,
+		firewait 					= .1,
+		chargewait					= 0,
+		triggermode 				= "Auto",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -1, -.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, .3),
+			["Left Arm"]	= CFrame.new(0, 0, .8),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+	["SKP-B"] = {
+		name						= "SKP-B",
+		fullname					= "Burst Phaser",		
+		category					= "SMG",
+		description					= "The SKP-B is an evolution of the SKP as a go-to weapon for special ops. In addition to a silencer and EM optics, the phase coil has been modified to fire in high power, easily controllable bursts. As such it handles perfectly in both tight quarters and long range action.",
+		quickdesc					= "Semi Automatic, 3 Shot Burst",
+		defaultcost					= 1500,
+		cost						= 1500,
+		slot						= 2,
+		holster						= "Hip",
+		handles						= 1,
+		barrels						= 1,
+		canaim						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.2,
+		
+		batterymin 					= 3,
+		batterymax 					= 3,
+		shotsdeplete				= 10,
+		
+		maxspread					= 1.5,
+		minspread					= 0.5,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 1,
+		maxrecoil					= 15,
+		
+		numshots					= 3,
+		
+		heatrate 					= 3,
+		cooltime 					= 3,	
+		coolwait 					= 0.5,
+		
+		damage						= 8,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 15,
+		firewait 					= 0.2,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Burst",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -1, -.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, 0),
+			["Left Arm"]	= CFrame.new(0, 0, .4),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+	["2XSKP"] = {
+		name						= "2XSKP",
+		fullname					= "Dual Wielded Autophasers",		
+		category					= "SMG",
+		description					= "Manufactured by GORIUS Armories, The SKPa (StarKnight Photon accelerator), named SKP for convenience is an autophaser with a high fire rate and respectable damage in a compact and stylish package. SKP makes up for what it lacks in accuracy with a devastating rate of fire.",
+		quickdesc					= "Automatic, Single Shot",		
+		defaultcost					= 2500,
+		cost						= 2500,
+		slot						= 2,
+		holster						= "Hip",
+		handles						= 2,
+		barrels						= 2,
+		canaim 						= false,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 2,
+		equipwait					= 0.1,
+		
+		batterymin 					= 3,
+		batterymax 					= 4,
+		shotsdeplete				= 20,
+		
+		maxspread					= 3,
+		minspread					= 1,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 1.5,
+		maxrecoil					= 25,
+		
+		numshots					= 5,
+		
+		heatrate 					= 1.5,
+		cooltime 					= 5,	
+		coolwait 					= 0.5,
+		
+		damage						= 4,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 16,
+		firewait 					= 0.1,
+		chargewait					= 0,
+		triggermode 				= "Auto",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -.5, -.25) * CFrame.Angles(math.rad(-180),math.rad(-180),0),
+				C1 = CFrame.new()
+			},
+			{	limb = "Left Arm",
+				C0 = CFrame.new(0, -.5, -.25) * CFrame.Angles(math.rad(-180),math.rad(-180),0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, .3, 0),
+			["Left Arm"]	= CFrame.new(0, .3, 0),
+			["Right Shoulder"]	= CFrame.new(2, 0, 1.5),
+			["Left Shoulder"]	= CFrame.new(-2, 0, 1.5)
+		}
+	},
+
+-- Support
+	["MED"] = {	
+		name						= "MED",
+		fullname					= "Tissue Regenerator",		
+		category					= "Support",
+		description					= "The Mark-ED Medical Facilitation tool is the most effective iteration of a series of handheld ?mediguns? which have been replacing traditional first aid systems in the field. The M3D fires a beam of medical nanites which coat the wounds of the patient and heal damage sustained in very short order.",
+		quickdesc					= "Constant Health Regeneration",	
+		defaultcost					= 1250,	
+		cost						= 1250,
+		slot						= 2,
+		holster						= "Hip",	
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= false,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= false,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 2,
+		equipwait					= 0.3,		
+		
+		batterymin 					= 1,
+		batterymax 					= 3,
+		shotsdeplete				= 20,
+		
+		maxspread					= 0,
+		minspread					= 0,
+		readjust					= 2,
+		camerarecoil                = 0,
+		recoilrate					= 0,
+		maxrecoil					= 0,
+		
+		heatrate 					= 1,
+		cooltime 					= 4,
+		coolwait 					= .25,
+		
+		damage						= -2,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 0,
+		
+		particlelifetime			= .1,
+		
+		bulletlifetime				= .05,
+		bulletlifetime2				= .05,
+		
+		firerate					= 0,
+		firewait 					= 0,
+		chargewait					= 0,
+		
+		triggermode 				= "Semi",
+		firemode 					= "Misc",
+		bullettype					= "Constant",
+		
+		range						= 20,
+		check						= "HitToPlayer",
+		action						= "Heal",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(-0.1, -1, -.25) * CFrame.Angles(math.rad(90),0,math.rad(180)),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -.1, 0),
+			["Left Arm"]	= CFrame.new(0, -.4, .1),
+			["Right Shoulder"]	= CFrame.new(2, 0, 1.5),
+			["Left Shoulder"]	= CFrame.new(-2, 0, 1.5)
+		}
+	},
+	["VEC"] = {	
+		name						= "VEC",		
+		fullname					= "Nanite Repair Dispenser",		
+		category					= "Support",
+		description					= "The VEC Repair Tool is a highly advanced piece of kit for the WIJian engineer. Effectively a nano-welder, this handheld tool fires a beam of repair nanites which are capable of reconstituting the structure of any mechanical device, be it a vehicle or a building from anything short of a complete scrap heap.",
+		quickdesc					= "Constant Vehicle Repair",	
+		defaultcost					= 1000,	
+		cost						= 1000,
+		slot						= 2,
+		holster						= "Hip",	
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= false,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= false,
+		teamkill					= false,
+		defaultlocked 				= true,
+		walkspeedreduce				= 2,
+		equipwait					= 0.3,
+		
+		batterymin 					= 1,
+		batterymax 					= 3,
+		shotsdeplete				= 20,
+		
+		maxspread					= 0.5,
+		minspread					= 0.2,
+		readjust					= 2,
+		camerarecoil                = 0,
+		recoilrate					= 0,
+		maxrecoil					= 0,
+		
+		heatrate 					= 1,
+		cooltime 					= 4,
+		coolwait 					= 0.25,
+		
+		damage						= -10,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= .1,
+		
+		bulletlifetime				= .05,
+		bulletlifetime2				= .05,
+		
+		firerate					= 0,
+		firewait 					= 0,
+		chargewait					= 0,
+		
+		triggermode 				= "Semi",
+		bullettype					= "Constant",
+		
+		--special assignment
+		firemode 					= "Misc",
+		range						= 15,
+		check						= "HitToEntity",
+		action						= "Repair",
+		
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(-0.1, -.75, -0.45) * CFrame.Angles(math.rad(90),0,math.rad(180)),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -.1, 0),
+			["Left Arm"]	= CFrame.new(0, -.4, .5),
+			["Right Shoulder"]	= CFrame.new(2, 0, 1.5),
+			["Left Shoulder"]	= CFrame.new(-2, 0, 1.5)
+		}
+	},
+
+-- Experimental
+	["O73"] = {	
+		name						= "O73",
+		fullname					= "Octagon-7-3 Beam Pistol",		
+		category					= "Restricted",		
+		description					= "The O73 is an experimental pistol developed by Alpharus. An odd weapon, it does not fire phaser energy like conventional energy weapons. Instead it generates, slows down, and propels a constant beam of tachyon particles at the target. While the particles are easily stopped by modern shielding, the unique tech of the O73 allows it to continually bombard and ultimately kill a target. Due to its expense, only military officers are issued this weapon",
+		quickdesc					= "Beam Pistol",
+		defaultcost					= 5000,		
+		cost						= 5000,
+		slot						= 2,
+		holster						= "Hip",	
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= true,
+		walkspeedreduce				= 0,
+		equipwait					= 0.2,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 20,
+		
+		maxspread					= 1,
+		minspread					= 0,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 1,
+		maxrecoil					= 25,
+		
+		heatrate 					= 1.5,
+		cooltime 					= 2,
+		coolwait 					= .1,
+		
+		damage						= 3,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 2,
+		
+		particlelifetime			= .1,
+		
+		bulletlifetime				= .05,
+		bulletlifetime2				= .05,
+		
+		firerate					= 0,
+		firewait 					= 0,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Constant",
+		bullettype					= "Constant",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -.75, -0.25) * CFrame.Angles(math.rad(-90),0,math.rad(0)),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, -.2, -.7),
+			["Left Arm"]	= CFrame.new(0, -.4, -.3),
+			["Right Shoulder"]	= CFrame.new(2, 0, 1.5),
+			["Left Shoulder"]	= CFrame.new(-2, 0, 1.5)
+		}
+	},
+	["DB3"] = {	
+		name						= "DB3",
+		fullname					= "Dual-Barrel Mark 3",		
+		category					= "Explosive",
+		description					= "The Dual Barrel Mark 3 is an experimental plasma cannon entering the final stages of R&D from HilTech. The weapon is named as such for its two sets of triple-barreled plasma cannons, which when charged up are capable of delivering a rapid burst of three plasma shots at a given target, resulting in heavy damage and suppressive capability.",
+		quickdesc					= "Multi-Barrel Plasma Burst Cannon",		
+		defaultcost					= 3000,
+		cost						= 3000,
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 6,
+		canaim 						= true,
+		cansprint 					= false,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 4,
+		equipwait					= 0.4,
+		
+		batterymin 					= 5,
+		batterymax 					= 5,
+		shotsdeplete				= 1,
+		
+		maxspread					= 2,
+		minspread					= 1,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 1,
+		maxrecoil					= 25,
+		
+		numshots					= 3,
+		
+		heatrate 					= 25,
+		cooltime 					= 5,
+		coolwait 					= .2,
+			
+		damage						= 20,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 10,
+		
+		explosion					= {
+									BlastRadius = 20,	
+		},
+		
+		particlelifetime			= .3,
+		
+		firerate					= 5,
+		firewait 					= 0,
+		chargewait					= 1,
+		triggermode 				= "Semi",
+		firemode 					= "BurstExplosive",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -1, -.5) * CFrame.Angles(math.rad(0),0,math.rad(180)),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(-.3, 0, 0),
+			["Left Arm"]	= CFrame.new(0, 1.3, .4),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
+		}
+	},
+	["T28"] = {
+		name						= "T28",
+		fullname					= "Double Barrel Shotgun",		
+		category					= "Shotgun",
+		description					= "The T28 DB Shotgun is an example of taking a concept and pushing it to its outermost extremes.  By strapping two disruption coils side by side this weapons system is able to punish those who happen to be on the firing end of it.",
+		quickdesc					= "Charged, 2 Shot Burst",		
+		defaultcost					= 4000,
+		cost						= 4000,
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= false,
+		cansprint 					= false,
+		cancrouch 					= true,
+		canmelee					= false,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 2,
+		equipwait					= 0.3,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 10,
+		
+		maxspread					= 4,
+		minspread					= 3,
+		readjust					= 2,
+		camerarecoil                = 1,
+		recoilrate					= 1,
+		maxrecoil					= 25,
+		
+		numshots					= 8,
+		
+		heatrate 					= 7,
+		cooltime 					= 2,	
+		coolwait 					= .3,
+		
+		damage						= 30,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 4,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 4,
+		firewait 					= .5,
+		chargewait					= .5,
+		triggermode 				= "Auto",
+		firemode 					= "Shotgun",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -1.25,-.75) * CFrame.Angles(math.rad(-135),math.rad(180),0),
+				C1 = CFrame.new()
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, .5),
+			["Left Arm"]	= CFrame.new(0, 2, .5),
+			["Right Shoulder"]	= CFrame.new(2, 0, 1.5),
+			["Left Shoulder"]	= CFrame.new(-2, 0, 1.5)
+		}
+	},
+	
+-- Literal Cancer
+	["GPR"] = {
+		name						= "GPR",
+		fullname					= "GPR",
+		category					= "Assault",
+		description					= "A controverial and toxic legacy of the WIJ Corporation, the Roblox Clan League was a universal and rudimentary combat system originally intended to provide a fair and cost-effective platform for settling disputes, later evolving into a common OS for many future clan combat engines. The GPR comprised one half of the RCL system's tiny arsenal, the origins of it's name unknown.",	
+		quickdesc					= "Literal Cancer",	
+		defaultcost					= 0,
+		cost						= 0,
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 1,
+		canaim						= false,
+		cansprint 					= false,
+		cancrouch 					= false,
+		canmelee					= false,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.1,
+		
+		batterymin 					= 0,
+		batterymax 					= 0,
+		shotsdeplete				= 10,
+		
+		maxspread					= 0.9,
+		minspread					= 0.9,
+		readjust					= 2,
+		camerarecoil                = 0,
+		recoilrate					= .5,
+		maxrecoil					= 18,
+		
+		numshots					= 3,
+		
+		heatrate 					= 3.3,
+		cooltime 					= 3,	
+		coolwait 					= 9999,
+		
+		damage						= 10,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 100,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 6.5,
+		firewait 					= 0.15,
+		chargewait					= 0,
+		triggermode 				= "Auto",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.5, -0.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			},
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, .3),
+			["Left Arm"]	= CFrame.new(-0.2, 0, 1.3),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-0.5, 0, 0.5)
+		}
+	},
+	["PSTL"] = {
+		name						= "PSTL",
+		fullname					= "PiSToL",
+		category					= "Handgun",
+		description					= "A controverial and toxic legacy of the WIJ Corporation, the Roblox Clan League was a universal and rudimentary combat system originally intended to provide a fair and cost-effective platform for settling disputes, later evolving into a common OS for many future clan combat engines. The PSTL comprised one half of the RCL system's tiny arsenal. This variant is based upon the so-called '4.0'. ",	
+		quickdesc					= "Literal Cancer",	
+		defaultcost					= 0,
+		cost						= 0,
+		slot						= 2,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 1,
+		canaim						= false,
+		cansprint 					= false,
+		cancrouch 					= false,
+		canmelee					= false,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.1,
+		
+		batterymin 					= 0,
+		batterymax 					= 0,
+		shotsdeplete				= 10,
+		
+		maxspread					= 0.9,
+		minspread					= 0.9,
+		readjust					= 2,
+		camerarecoil                = 0,
+		recoilrate					= 0.5,
+		maxrecoil					= 18,
+		
+		numshots					= 1,
+		
+		heatrate 					= 8.3,
+		cooltime 					= 3,	
+		coolwait 					= 9999,
+		
+		damage						= 10,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 100,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 1,
+		firewait 					= 0.3,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.5, -0.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			},
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, 0.3),
+			["Left Arm"]	= CFrame.new(-0.2, 0, 1.3),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-0.5, 0, 0.5)
+		}
+	},
+
+-- Gadgets
+	["NDG"] = {	
+		name						= "NDG",
+		fullname					= "Plasma Grenade",		
+		category					= "Grenade",
+		description					= "The Nadion Detonation Grenade is the standard explosive grenade issued to WIJ forces. It has very simple and easy to use code keys which ensure proper usage of the ordnance. Upon being thrown the grenade begins a nadion cascade reaction, which results in a small explosion once it goes off.",
+		quickdesc					= "Explosive",	
+		defaultcost					= 0,	
+		cost						= 0,
+		slot						= 3,
+		type						= "Projectile",
+		func						= "Grenade",
+		teamkill					= false,
+		defaultlocked 				= false,
+		damage						= 50,
+		calcDamage = function(damage, distance)
+			damage = damage + (250 /distance)
+			return math.clamp(damage, 50, 75)
+		end,
+		vehiclemultiplier			= 4,		
+		
+		explosion					= {
+									BlastPressure = 0,
+									BlastRadius = 15,
+									DestroyJointRadiusPercent = 1,
+									ExplosionType = "Craters",			
+		},
+		projectile					= {
+									KillTime = 5,
+									Speed = 2.5,
+									Force = 50,
+									EffectWait = 1,
+									WaitAfterEffect = 0.3,
+									Gravity = -25
+		},
+	},
+	["C0S"] = {	
+		name						= "C0S",
+		fullname					= "Distortion Grenade",		
+		category					= "Grenade",
+		description					= "The Caustic Obliteration Sphere Grenade is a specialized area-denial munition. Once thrown and activated the grenade quickly disperses large amounts of heat and plasma within a contained area. Personnel caught in the area of effect are quickly chewed through, taking damage until they are able to escape the field or are dissolved by the plasma.",
+		quickdesc					= "Temporary Constant Area Damage",	
+		defaultcost					= 1500,	
+		cost						= 1500,
+		slot						= 3,
+		type						= "Projectile",
+		func						= "ConstantDamage",
+		teamkill					= false,
+		defaultlocked 				= false,
+		damage						= 2,
+		calcDamage = function(damage, distance)
+			return math.clamp(damage + (10 * (1 / distance)), 1, 15)
+		end,
+		vehiclemultiplier			= 0.2,		
+		
+		size						= 25,
+		decreasesize				= true,
+		
+		projectile					= {
+									KillTime = 5,
+									Speed = 2.5,
+									Force = 50,
+									EffectWait = 5,
+									WaitAfterEffect = 0.2,
+									Gravity = -25
+		},
+	},
+	["H3G"] = {	
+		name						= "H3G",
+		fullname					= "Nanite Delivery Grenade",	
+		category					= "Grenade",
+		description					= "The Helios Mk. 3 Grenade is a specialized grenade issued to WIJ medical operatives.  It has very simple and easy to use code keys which ensure proper usage of the ordnance. Upon being thrown the grenade releases its payload of healing nanites, which affix to any allied personnel in the area and effect healing immediately.",
+		quickdesc					= "Radial Healing Effect",
+		defaultcost					= 1500,
+		cost						= 1500,
+		slot						= 3,
+		type						= "Projectile",
+		func						= "InstaHeal",
+		teamkill					= false,
+		defaultlocked 				= false,
+				
+		damage						= -50,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+
+		vehiclemultiplier			= 10,		
+		
+		explosion					= {
+									BlastRadius = 25
+		},
+		projectile					= {
+									KillTime = 5,
+									Speed = 2.5,
+									Force = 35,
+									EffectWait = 0.2,
+									WaitAfterEffect = 0.3,
+									Gravity = -25
+		},
+	},
+	["D4K"] = {	
+		name						= "D4K",
+		fullname					= "Smoke Grenade",		
+		category					= "Grenade",
+		quickdesc					= "Smoke Grenade",		
+		description					= "The Deployable Forward Cover grenade is a utility munition intended to screen advances in open areas and territory. Upon activation the grenade spews forth a mixture of thick smoke which expands to shield a force from prying eyes. The chemicals used are assured to be safe to shielded and unshielded personnel.",
+		defaultcost					= 750,
+		cost						= 750,
+		slot						= 3,
+		defaultlocked 				= false,
+
+		type						= "Projectile",
+		func						= "Smoke",
+		projectile					= {
+									KillTime = 5,
+									Speed = 2.5,
+									Force = 35,
+									EffectWait = 15,
+									WaitAfterEffect = 15,
+									Gravity = -25
+		},
+	},
+	["SHG"] = {	
+		name						= "SHG",
+		fullname					= "Energy Repulsion Grenade",		
+		category					= "Grenade",
+		quickdesc					= "Temporary Area Shield",	
+		description					= "The Shield Grenade is a utility munition designed to provide quickly deployable auxiliary protection for troops. When the grenade activates, its shield array engages and surrounds a small area with a protective bubble. While the shield is especially durable, the power cell of the grenade burns out very quickly.",
+		defaultcost					= 2000,
+		cost						= 2000,
+		slot						= 3,
+		defaultlocked 				= false,
+		type						= "Projectile",
+		func						= "ForceField",
+		
+		projectile					= {
+									KillTime = 8,
+									Speed = 2.5,
+									Force = 35,
+									EffectWait = 6,
+									WaitAfterEffect = 1,
+									Gravity = -25
+		},
+	},
+	["EMP"] = {	
+		name						= "EMP",
+		fullname					= "Electromagnetic pulse",		
+		category					= "Grenade",
+		quickdesc					= "Visor Distortion and Energy Depletion",		
+		description					= "The Electromagnetic Pulse Grenade is a utility munition primarily designed to aid troops in the breaching of well defended areas. Upon detonation the grenade produces a flare of electromagnetic energy which can overload mechanical equipment and temporarily overload the HUDs of combat troopers in an area, disorienting them for a time.",
+		defaultcost					= 2000,
+		cost						= 2000,
+		slot						= 3,
+		type						= "Projectile",
+		func						= "EnergyDeplete",
+		teamkill					= false,
+		defaultlocked 				= false,
+		range						= 25,
+		
+		projectile					= {
+									KillTime = 5,
+									Speed = 2.5,
+									Force = 50,
+									EffectWait = 0.1,
+									WaitAfterEffect = 0.3,
+									Gravity = -25
+		},
+	},
+	["MTA-S"] = {	
+		name						= "MTA-S",
+		fullname					= "Anti-Infantry Deployable Turret",		
+		category					= "Deployable",
+		quickdesc					= "Automatic, Single Shot",		
+		description					= "The Mobile Turret Assembly System is a ready-made engineering package which is capable of deploying a vehicle-grade turret at the position of unpacking. The turret’s phaser systems are reliable, quite durable, and capable of putting down potent fire at considerable range.",
+		defaultcost					= 2000,
+		cost						= 2000,
+		slot						= 3, --deployable slot
+		deltaslot					= 5, -- turret slot
+		type						= "Deployable",
+		barrels						= 3,
+		canaim						= false,
+		cansprint 					= false,
+		cancrouch 					= false,
+		canmelee					= false,
+		teamkill					= false,
+		defaultlocked 				= true,
+		walkspeedreduce				= 0,
+		equipwait					= 0,
+		
+		deploytime					= 1,
+		teamkillprevention			= false,
+		
+		maxspread					= 1,
+		minspread					= 0.5,
+		readjust					= 2,
+		recoilrate					= 0.5,
+		maxrecoil					= 15,
+		
+		numshots					= 3,
+		
+		heatrate 					= 0.75,
+		cooltime 					= 6,	
+		coolwait 					= 0.3,
+		
+		damage						= 11,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 5,
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 10,
+		firewait 					= 0,
+		chargewait					= 0.5,
+		triggermode 				= "Auto",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+	},
+	["MTS-X"] = {	
+		name						= "MTS-X",
+		fullname					= "Anti-Vehicle	Deployable Turret",	
+		category					= "Deployable",
+		description					= "The MTS-X is a ready-made engineering package which is capable of deploying a vehicle-grade turret at the position of unpacking. Unlike the standard engineering issue MTA-S, the MTS-X fabricates a turret utilizing AT phase coils allowing it to deliver a less sustained but more directly powerful explosive attack.",
+		quickdesc					= "Semi Automatic, Single Explosive Shot",
+		defaultcost					= 3000,
+		cost						= 3000,
+		slot						= 3, --deployable slot
+		deltaslot					= 5, -- turret slot
+		type						= "Deployable",
+		barrels						= 3,
+		canaim						= false,
+		cansprint 					= false,
+		cancrouch 					= false,
+		canmelee					= false,
+		teamkill					= false,
+		defaultlocked 				= true,
+		walkspeedreduce				= 0,
+		equipwait					= 0,
+		
+		deploytime					= 1,
+		teamkillprevention			= false,
+		
+		maxspread					= 1,
+		minspread					= 0.5,
+		readjust					= 2,
+		recoilrate					= 0.5,
+		maxrecoil					= 15,
+		
+		numshots					= 3,
+		
+		heatrate 					= 15,
+		cooltime 					= 6,	
+		coolwait 					= 0.5,
+		
+		damage						= 10,
+		vehiclemultiplier			= 10,		
+		
+		calcDamage = function(damage, distance)
+			return damage + (40 * (1/distance))
+		end,
+		
+		explosion					= {
+									BlastPressure = 0,
+									BlastRadius = 15,
+									DestroyJointRadiusPercent = 1,
+									ExplosionType = "Craters",			
+		},
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 10,
+		firewait 					= 0.5,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "SingleExplosive",
+		bullettype					= "Ray"
+	},
+	["HTS-X"] = {	
+		name						= "HTS-X",
+		fullname					= "Hydraulic Turret System",	
+		category					= "",
+		description					= "", -- Turret tool for GROWLER, no desc needed
+		quickdesc					= "Semi Automatic, Single Explosive Shot",
+		defaultcost					= 3000,
+		cost						= 3000,
+		slot						= 3, --deployable slot
+		deltaslot					= 5, -- turret slot
+		type						= "Deployable",
+		barrels						= 3,
+		canaim						= false,
+		cansprint 					= false,
+		cancrouch 					= false,
+		canmelee					= false,
+		teamkill					= false,
+		defaultlocked 				= true,
+		walkspeedreduce				= 0,
+		equipwait					= 0,
+		
+		maxspread					= 1,
+		minspread					= 0.5,
+		readjust					= 2,
+		recoilrate					= 0.5,
+		maxrecoil					= 15,
+		
+		numshots					= 3,
+		
+		heatrate 					= 40,
+		cooltime 					= 6,	
+		coolwait 					= 1,
+		
+		damage						= 70,
+		vehiclemultiplier			= 10,		
+		
+		calcDamage = function(damage, distance)
+			return damage + (40 * (1/distance))
+		end,
+		
+		explosion					= {
+									BlastPressure = 0,
+									BlastRadius = 30,
+									DestroyJointRadiusPercent = 1,
+									ExplosionType = "Craters",			
+		},
+		
+		projectile					= {
+									KillTime = 1.5,
+									Speed = 10,
+									Force = 100,
+									EffectWait = 0,
+									Gravity = -0.5,
+									WaitAfterEffect = 0.5
+		},
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 10,
+		firewait 					= 2,
+		chargewait					= 0,
+		triggermode 				= "Semi",
+		firemode 					= "Launcher",
+		bullettype					= "Projectile"
+	},
+	["AAQ"] = {	
+		name						= "AAQ",
+		fullname					= "Automated Targeting Deployable Turret",		
+		category					= "Deployable",
+		quickdesc					= "Automatic, Single Shot",		
+		description					= "The Aggressive Automated Quick reactor is a sophisticated light-armoured turret defense system. Outfitted with a proximity sensor, the AAQ is designed to neutralize or suppress any hostile entities that wander within range of its rapid-fire phaser coil.",
+		defaultcost					= 5000,
+		cost						= 5000,
+		slot						= 3,
+		type						= "Deployable",
+		teamkill					= false,
+		defaultlocked 				= true,
+		deploytime					= 1.5,
+		teamkillprevention			= true,
+		func						= "AutoTurret",
+		effectdistance				= 75,
+		checktime					= 2,
+		
+		maxspread					= 7,
+		minspread					= 5,
+		readjust					= 2,
+		recoilrate					= 0.5,
+		maxrecoil					= 15,
+		
+		numshots					= 3,
+		
+		damage						= 2,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 5,
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 10,
+		firewait 					= 0,
+		chargewait					= 0,
+		
+		bullettype					= "Ray"
+	},
+	["VOL"] = {	
+		name						= "VOL",
+		fullname					= "Scorpius Volatile Incendiary Projector",		
+		category					= "Deployable",
+		quickdesc					= "Flame Turret",		
+		description					= "Scorpius' Volatile Incendiary Projector is a light-armoured turret defense system outfitted with a miniaturized plasma thrower. The VOL is best used for point defense and performs well against organic targets",
+		defaultcost					= 5000,
+		cost						= 5000,
+		slot						= 3,
+		type						= "Deployable",
+		teamkill					= false,
+		defaultlocked 				= false,
+		deploytime					= 1.5,
+		teamkillprevention			= true,
+		func						= "AutoTurret",
+		effectdistance				= 75,
+		checktime					= 2,
+		
+		maxspread					= 7,
+		minspread					= 5,
+		readjust					= 2,
+		recoilrate					= 0.5,
+		maxrecoil					= 15,
+		
+		numshots					= 3,
+		
+		damage						= 2,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 5,
+		
+		particlelifetime			= 0.1,
+		
+		firerate					= 10,
+		firewait 					= 0,
+		chargewait					= 0,
+		
+		bullettype					= "Flame"
+	},
+	["B4R"] = {	
+		name						= "B4R",
+		fullname					= "Deployable barricade",		
+		category					= "Deployable",
+		description					= "The Barrier Rapid Deployment System is a quick deployment mechanism for a small generator that outputs a decently sized hardlight barrier that provides emergency cover against small-arms kinetic and energy weapons fire.",
+		quickdesc					= "Deployable Barricade",	
+
+		category					= "Deployable",
+
+		defaultcost					= 1500,
+		cost						= 1500,
+		slot						= 3,
+		defaultlocked 				= false,
+		type						= "Deployable",
+		
+		deploytime					= 1.5,
+		teamkillprevention			= true,
+		
+		gadget						= "Deployable"
+	},
+	["M1Z"] = {	
+		name						= "M1Z",
+		fullname					= "Proximity Mine",		
+		category					= "Deployable",
+		description					= "The Mark 1 Zone Denial System is a quick deployment mechanism for a system of easily concealable, high impact land mines. Once placed the detonation mechanism of the mine arms, waiting for hostiles to get in just a bit too close before delivering a fatal explosive payload.",
+		quickdesc					= "Area Damage",	
+		defaultcost					= 1000,	
+		cost						= 1000,
+		slot						= 3,
+		defaultlocked 				= false,
+		type						= "Deployable",
+		func						= "Mine",
+		teamkill					= false,
+		defaultlocked 				= false,
+		deploytime					= 0.5,
+		teamkillprevention			= true,
+		
+		range						= 7,
+		damage						= 95,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 5,
+		
+		explosion					= {
+									BlastPressure = 0,
+									BlastRadius = 15,
+									DestroyJointRadiusPercent = 1,
+									ExplosionType = "Craters",			
+		}
+	},
+	["C4"] = {	
+		name						= "C4",
+		fullname					= "Plasma Charges",		
+		category					= "Deployable",
+		description					= "When the utmost in breaching and destructive power is necessary, the humble C4 Explosive, a stable and reliable explosive munition is the tool for the job. While the explosive can be damaged and destroyed by fire, only by using a special detonation system packaged with the C4 can actually trigger its explosive effects.",
+		quickdesc					= "Detonateable, Area Damage",		
+		defaultcost					= 1000,
+		cost						= 1000,
+		slot						= 3,
+		type						= "Deployable",
+		func						= "RemoteControl",
+		teamkill					= false,
+		defaultlocked 				= false,
+		deploytime					= 0.5,
+		teamkillprevention			= true,
+		
+		damage						= 250,
+		calcDamage = function(damage, distance)
+			damage = damage + (250 /distance)
+			return math.clamp(damage, 50, 75)
+		end,
+		
+		vehiclemultiplier			= 5,
+		
+		explosion					= {
+									BlastPressure = 0,
+									BlastRadius = 15,
+									DestroyJointRadiusPercent = 1,
+									ExplosionType = "Craters",			
+		}
+	},
+	["STAS3N"] = {	
+		name						= "STAS3N",
+		fullname					= "Deployable Healing Station",		
+		category					= "Deployable",
+		description					= "The [Station] is a ready-made engineering package which is capable of deploying a healing station at the position of unpacking. As long as the device is functional, it will stream healing nanites into friendly units, keeping them fit for duty on the front lines of a battle.",
+		quickdesc					= "Constant Area Healing Effect",
+		defaultcost					= 5000,		
+		cost						= 5000,
+		slot						= 3,
+		defaultlocked 				= false,
+		type						= "Deployable",
+		func						= "ProximityStation",
+		teamkill					= true,
+		
+		deploytime					= 1.5,
+		teamkillprevention			= true,
+		
+		heal						= 2.5,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 5,
+		
+		explosion					= {
+									BlastRadius = 20		
+		}
+	},
+	["N0T5"] = {	
+		name						= "N0T5",
+		fullname					= "Explosive Dampener",		
+		category					= "Deployable",
+		description					= "The Nadion Offset Transfusion System is a portable anti-explosion defense system. While unable to absorb the energy of direct weapons fire this affordable package can absorb radiant energy patterns, in effect preventing explosions nearby from actually exploding. The energy is directed into the device's capacitor for safe diffusion.",
+		quickdesc					= "Explosive Nullifier",
+		defaultcost					= 1500,
+		cost						= 1500,
+		slot						= 3,
+		defaultlocked 				= false,
+		type						= "Deployable",
+		
+		deploytime					= 0.5,
+		effectrange					= 25,
+		teamkillprevention			= true
+	},
+	["RA4"] = {	
+		name						= "RA4",
+		category					= "Deployable",
+		description					= "Beep?",
+		quickdesc					= "Scans the area for hostiles and spots them.",
+		defaultcost					= 1000,
+		cost						= 1000,
+		slot						= 3,
+		defaultlocked 				= false,
+		type						= "Deployable",
+		func						= "Radar",
+		
+		deploytime					= 0.5,
+		effectrange					= 35,
+		teamkillprevention			= true
+	},
+	["VITAS"] = {	
+		name						= "VITAS",
+		category					= "Deployable",
+		description					= "la la la",
+		quickdesc					= "la la la",
+		defaultcost					= 1000,
+		cost						= 1000,
+		slot						= 3,
+		defaultlocked 				= false,
+		type						= "Deployable",
+		
+		deploytime					= 0.5,
+		effectrange					= 35,
+		teamkillprevention			= true
+	},
+
+-- Skills	
+	["INVI-C"] = {	
+		name						= "INVI-C",
+		fullname					= "Personal Cloaking Device",		
+		category					= "Suit module",
+		description					= "The Invisibility Cloak harness is a special device mounted to the lower armor of a trooper. The device consists of a complex of advanced distortion technology which block a person?s electromagnetic profile, rendering them nearly invisible for a time. It is to be noted that a weapons discharge is enough to overload the device, resulting in the cloak field dropping.",
+		quickdesc 					= "Near Invisibility",	
+		defaultcost					= 1000,	
+		cost						= 1000,
+		slot						= 4,
+		defaultlocked 				= false,
+				
+		holster						= "TorsoModule",
+		
+		trigger						= "Press",
+		
+		restrictions				= { ["firing"] = true, ["damage"] = true, ["sitting"] = false },
+		
+		transparency				= .98,
+		
+		energydeplete				= 3,
+		energyregen					= 1,
+		energymin					= 20
+	},
+	["SH3L-S"] = {	
+		name						= "SH3L-S",
+		fullname					= "Medical Nanite Dispenser",		
+		category					= "Suit module",
+		description					= "The Self Heal System is a special implant mounted in close proximity to the heart, lungs and other vital organs of a trooper. When the trooper is physically damaged by enemy fire, the device can be activated, sending a stream of healing nanites directly through the bloodstream to damaged areas.",
+		quickdesc					= "Self Healing",	
+		defaultcost					= 1000,	
+		cost						= 1000,
+		slot						= 4,
+		defaultlocked 				= false,
+		
+		holster						= "TorsoModule",
+		
+		trigger						= "Hold",
+		
+		restrictions				= { ["firing"] = false, ["damage"] = true, ["sitting"] = false },
+		
+		heal						= 5,
+		rate						= .3,
+		
+		energydeplete				= 3,
+		energyregen					= 2,
+		energymin					= 40
+	},
+	["ENHC-S"] = {	
+		name						= "ENHC-S",
+		fullname					= "Shield Overcharger", 		
+		category					= "Suit module",
+		description					= "The Enhanced Capacitor Shield harness is a special device which is fitted over the normal armor of a trooper. The device consists of a shield overcharge matrix which hooks into shield implants and armor-based shield generators, and holds a capacitor which when activated, feeds a constant overcharge into the wearer's shield systems.",
+		quickdesc					= "Damage Resistance",
+		defaultcost					= 1000,		
+		cost						= 1000,
+		slot						= 4,
+		defaultlocked 				= false,
+				
+		holster						= "TorsoModule",
+		
+		trigger						= "Press",
+		
+		restrictions				= { ["firing"] = false, ["damage"] = false, ["sitting"] = false },
+		
+		walkspeedreduce				= 2,		
+		damagenerf					= 0.5,
+		
+		energydeplete				= 2,
+		energyregen					= 2,
+		energymin					= 20
+	},
+	["FIEL-X"] = {	
+		name						= "FIEL-X",
+		fullname					= "Shock Field Generator",
+		category					= "Suit module",
+		quickdesc					= "Area Damage",		
+		description					= "The Field Generator X is a special harness mounted to one of the arms, or other relevant appendages, of a trooper. Upon activation, the device effectively amplifies the wearer?s arm strength by a large factor by generating a phased energy field around it.",
+		defaultcost					= 1000,
+		cost						= 1000,
+		slot						= 4,
+		defaultlocked 				= false,
+				
+		holster						= "RightArmModule",
+		
+		trigger						= "Press",
+		
+		restrictions				= { ["firing"] = false, ["damage"] = false, ["sitting"] = true },
+		
+		damage						= 60,
+		calcDamage = function(damage, distance)
+			return math.clamp(damage * (10/distance), 0, 60)
+		end,
+		vehiclemultiplier			= 2,
+		
+		explosion					= {
+									BlastRadius = 15		
+		},
+		
+		energydeplete				= 100,
+		energyregen					= 3,
+		energymin					= 99
+	},
+	["APS"] = {	
+		name						= "APS",
+		fullname					= "Active Protection System",		
+		category					= "Suit module",
+		description					= "The ?APS? deflector screen projection harness is a special device manufactured by a less mentally stable sect of GORIUS Armories engineers. The APS, when activated, deploys a projected barrier covering the front arc of the trooper using it.",
+		quickdesc					= "Shot Blocking Shield",
+		defaultcost					= 1000,	
+		cost						= 1000,
+		slot						= 4,
+		defaultlocked 				= false,
+				
+		holster						= "TorsoModule",
+		
+		trigger						= "Press",
+		
+		restrictions				= { ["firing"] = false, ["damage"] = false, ["sitting"] = true },
+		
+		rate						= .5,
+		
+		energydeplete				= 2,
+		energyregen					= 2,
+		energymin					= 30
+	},
+	["SP0T-R"] = {	
+		name						= "SP0T-R",
+		fullname					= "Hostile Detection Module",		
+		category					= "Suit module",
+		description					= "The Spotter is a high sensitivity telemetry and sensing package which conveniently mounts onto the arm of a reconnaissance unit. When activated the device sends forth a wave of deep penetrating scans on variable frequencies, permitting the user to spot enemies who are hidden behind cover or concealment.",
+		quickdesc					= "Hostile Marking",
+		defaultcost					= 1000,		
+		cost						= 1000,
+		slot						= 4,
+		defaultlocked 				= false,
+				
+		holster						= "LeftArmModule",
+		
+		trigger						= "Hold",
+		
+		restrictions				= { ["firing"] = false, ["damage"] = false, ["sitting"] = false },
+		
+		rate						= .5,
+		
+		energydeplete				= 100,
+		energyregen					= 1,
+		energymin					= 99
+	},
+	["JET-P"] = {	
+		name						= "JET-P",
+		fullname					= "Vertical Boost Jets",
+		category					= "Suit module",
+		description					= "The Jet Pack is a special harness mounted to the back of the normal armor of a trooper. Two heavy duty fusion thrusters direct plasma and permit a soldier to fly far over a battlefield and eventually land safely, granting them a significant tactical advantage over hostiles in the area.",
+		quickdesc					= "Fast Vertical Boost, Limited Mobility",	
+		defaultcost					= 1000,	
+		cost						= 1000,
+		slot						= 4,
+		defaultlocked 				= false,
+				
+		holster						= "TorsoModule",
+		
+		trigger						= "Hold",
+		
+		restrictions				= { ["firing"] = false, ["damage"] = false, ["sitting"] = true },
+		
+		rate						= .3,
+		
+		energydeplete				= 12,
+		energyregen					= 3,
+		energymin					= 12,
+	},
+	["D0DG-P"] = {	
+		name						= "D0DG-P",
+		fullname					= "Horizontal Boost Jets",		
+		category					= "Suit module",
+		description					= "The Dodge Pack is a special harness mounted to the back of the normal armor of a trooper. Two lightweight fusion thrusters direct plasma and permit a soldier to dash far more quickly than simply sprinting would permit, allowing a soldier to quickly maneuver out of harm?s way, or into a stronger tactical position.",
+		quickdesc					= "Strong Horizontal Boost",	
+		defaultcost					= 1000,	
+		cost						= 1000,
+		slot						= 4,
+		defaultlocked 				= false,
+				
+		holster						= "TorsoModule",
+		
+		trigger						= "Press",
+		
+		restrictions				= { ["firing"] = false, ["damage"] = false, ["sitting"] = true },
+		
+		energydeplete				= 100,
+		energyregen					= 3,
+		energymin					= 99
+	},
+	["TEST"] = {	
+		name						= "TEST",
+		fullname					= "TEST Boost Jets",		
+		category					= "TEST module",
+		description					= "The TEST Pack is a TEST harness TEST to the TEST of the TEST armor of a TEST. Two lightweight fusion thrusters direct plasma and permit a soldier to dash far more quickly than simply sprinting would permit, allowing a soldier to quickly maneuver out of harm?s way, or into a stronger tactical position.",
+		quickdesc					= "TEST Horizontal Boost",	
+		defaultcost					= 1000,	
+		cost						= 1000,
+		slot						= 4,
+		defaultlocked 				= false,
+				
+		holster						= "TorsoModule",
+		
+		trigger						= "Press",
+		
+		restrictions				= { ["firing"] = false, ["damage"] = false, ["sitting"] = true },
+		
+		energydeplete				= 100,
+		energyregen					= 3,
+		energymin					= 99
+	},
+	["NJ-CT"] = {	
+		name						= "NJ-CT",
+		fullname					= "Matter manipulator",		
+		category					= "Suit module",
+		description					= "Developed by Gorius Armories for the WIJ Officer Council.",
+		quickdesc					= "?",
+		defaultcost					= 0,		
+		cost						= 0,
+		slot						= 4,
+		defaultlocked 				= false,
+				
+		holster						= "TorsoModule",
+		
+		trigger						= "Press",
+		
+		restrictions				= { ["firing"] = false, ["damage"] = false, ["sitting"] = true },
+		
+ 		energydeplete				= .2,
+		energyregen					= 10,
+		energymin					= 2
+	},
+	
+	["OVER-C"] = {	
+		name						= "OVER-C",
+		fullname					= "Weapon overclocker",		
+		category					= "Suit module",
+		description					= "The OVER-Clocker is a compact module that is capable of, in a sense, 'overclocking' a weapon's phaser coils by overloading them to a near-critical state. The subsequently volatile plasma reaction significantly boosts the weapon's fire rate and phaser output, but sacrifices a large amount of accuracy due to the sheer recoil caused. Additionally, this reaction also puts much greater strain on the weapon's battery, draining it and overheating significantly faster than it's usual state. As such, the OVER-C is not intended to be used conventionally on a frequent basis, only when the moment calls for it.",
+		quickdesc					= "Weapon overclocker",	
+		defaultcost					= 1000,	
+		cost						= 1000,
+		slot						= 4,
+		defaultlocked 				= false,
+				
+		holster						= "TorsoModule",
+		
+		trigger						= "Press",
+		
+		restrictions				= { ["firing"] = false, ["damage"] = false, ["sitting"] = true },
+		
+		energydeplete				= 5,
+		energyregen					= 2,
+		energymin					= 10
+	},
+-- Melee
+	["SWD"] = {
+		name						= "SWD",
+		fullname					= "Power Sword",		
+		category					= "Melee",
+		description					= "The SWD Power Sword device is not a blade but in reality a small hand-held plasma and force field generator. When activated the device flash-forges a searing hot blade of high temperature plasma, contained by forcefields to give it both physical tangibility and a sharpness meeting and exceeding that of the finest carbon nanotube blades utilized by non-WIJian species.",
+		quickdesc					= "Plasma blade",	
+		defaultcost					= 300,	
+		cost						= 300,
+		slot						= 2,
+		holster						= "Hip",	
+		handles						= 1,
+		canaim 						= false,
+		cansprint 					= false,
+		cancrouch 					= true,
+		canmelee					= false,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= -7,
+		equipwait					= 0.2,
+		
+		minspread					= 0,
+		maxspread					= 0,
+		
+		heatrate					= 0,
+		
+		distance					= 4,
+			
+		damage						= 60,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		
+		vehiclemultiplier			= 1,	
+		explosion					= {	BlastRadius = 4.7 },	
+
+		firewait 					= 0.4,
+		chargewait					= 0,
+		
+		triggermode					= "Blade",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.75, -0.5) * CFrame.Angles(math.rad(-30), math.rad(-20), math.rad(180)),
+				C1 = CFrame.new(),
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, .6, 0),
+			["Left Arm"]	= CFrame.new(0, .8, 0),
+			["Right Shoulder"]	= CFrame.new(0, 0, 0),
+			["Left Shoulder"]	= CFrame.new(0, 0, 0)
+		}
+	},
+	["PICK"] = {
+		name						= "PICK",
+		fullname					= "Power Pickaxe",		
+		category					= "Melee",
+		description					= "The Powered Pickaxe is a energy device utilized by the Alliance. Operating on the same design principles as the SWD, the PICK is mainly used like a traditional hand-held mining tool in situations where more sophisticated equipment cannot be used, and if needed, as an emergency combat apparatus.",
+		quickdesc					= "Plasma Pickaxe",	
+		defaultcost					= 300,	
+		cost						= 300,
+		slot						= 2,
+		holster						= "Hip",	
+		handles						= 1,
+		canaim 						= false,
+		cansprint 					= false,
+		cancrouch 					= true,
+		canmelee					= false,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= -7,
+		equipwait					= 0.2,
+		
+		minspread					= 0,
+		maxspread					= 0,
+		
+		heatrate					= 0,
+		
+		distance					= 4,
+			
+		damage						= 60,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		
+		vehiclemultiplier			= 1,	
+		explosion					= {	BlastRadius = 4.7 },	
+
+		firewait 					= 0.4,
+		chargewait					= 0,
+		
+		triggermode					= "Blade",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.75, -0.5) * CFrame.Angles(math.rad(-30), math.rad(-20), math.rad(180)),
+				C1 = CFrame.new(),
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, .6, 0),
+			["Left Arm"]	= CFrame.new(0, .8, 0),
+			["Right Shoulder"]	= CFrame.new(0, 0, 0),
+			["Left Shoulder"]	= CFrame.new(0, 0, 0)
+		}
+	},
+	["STUN"] = {
+		name						= "STUN",	
+		fullname                    = "Stun Stick",
+		category					= "Melee",
+		description					= "The Stun Stick's ancient design dates back to the early days of the Corporation, as does it's history. It is a basic device best described as a 'ball on a stick' charged with a high-energy current capable of rendering infantry unconscious or immobile in a couple of whacks, and acting as an effective bludgeon when out of power.",
+		quickdesc					= "Non-lethal Melee",	
+		defaultcost					= 0,	
+		cost						= 0,
+		slot						= 2,
+		holster						= "Hip",	
+		handles						= 1,
+		canaim 						= false,
+		cansprint 					= false,
+		cancrouch 					= true,
+		canmelee					= false,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= -5,
+		equipwait					= 0.2,
+		func                        = "ShieldRestrain",
+		
+		minspread					= 0,
+		maxspread					= 0,
+		
+		heatrate					= 0,
+		
+		distance					= 4,
+		vehiclemultiplier			= 1,		
+
+		damage						= 1,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		
+		explosion					= {	BlastRadius = 4.7 },
+		
+		firewait 					= 0.75,
+		chargewait					= 0,
+		
+		triggermode					= "Blade",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.75, -0.5) * CFrame.Angles(math.rad(-30), math.rad(-20), math.rad(180)),
+				C1 = CFrame.new(),
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0.6, 0),
+			["Left Arm"]	= CFrame.new(0, 0.8, 0),
+			["Right Shoulder"]	= CFrame.new(0, 0, 0),
+			["Left Shoulder"]	= CFrame.new(0, 0, 0)
+		}
+	},
+	["TAG"] = {
+		name						= "TAG",	
+		fullname                    = "Tag Stick",
+		category					= "Melee",
+		description					= "This version of the Stun Stick has been repurposed for recreational purposes. Compared to it's predecessor, this stick is capable of rendering it's target immobile for a near-infinite duration, but has been rendered non-lethal in any and every fashion. WIJ Alliance soldiers would often utilize this tool to play games such as Freeze Tag in their spare time, or during Training sessions.",
+		quickdesc					= "Tagging Stick",	
+		defaultcost					= 0,	
+		cost						= 0,
+		slot						= 2,
+		holster						= "Hip",	
+		handles						= 1,
+		canaim 						= false,
+		cansprint 					= false,
+		cancrouch 					= true,
+		canmelee					= false,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= -5,
+		equipwait					= 0.2,
+		func                        = "ShieldRestrain",
+		
+		minspread					= 0,
+		maxspread					= 0,
+		
+		heatrate					= 0,
+		
+		distance					= 4,
+		
+		damage						= 0,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		
+		firewait 					= 0.75,
+		chargewait					= 0,
+		
+		triggermode					= "Blade",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -.75, -.5) * CFrame.Angles(math.rad(-30), math.rad(-20), math.rad(180)),
+				C1 = CFrame.new(),
+			}
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, .6, 0),
+			["Left Arm"]	= CFrame.new(0, .8, 0),
+			["Right Shoulder"]	= CFrame.new(0, 0, 0),
+			["Left Shoulder"]	= CFrame.new(0, 0, 0)
+		}
+	},
+	["SPJC"] = {	
+		name						= "SPJC",		
+		fullname					= "Space Juice",		
+		category					= "Misc",
+		description					= "",
+		quickdesc					= "",
+		defaultcost					= 1000,		
+		cost						= 1000,
+		slot						= 2,
+		holster						= "Hip",	
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= false,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canmelee					= false,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 2,
+		equipwait					= 0.3,
+		
+		firewait					= 1.3,
+		chargewait					= 0,
+		
+		-- Special assignment
+		triggermode					= "Consumable",
+		
+		effectwait					= 5,
+		effecttime					= 60,
+		
+		projectile					= {
+									KillTime = 5,
+									Speed = 2,
+									Force = 20,
+									EffectWait = 0,
+									Gravity = -20,
+									WaitAfterEffect = 1, 
+		},
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -1.2, -.5) * CFrame.Angles(math.rad(225), 0, math.rad(0)),
+				C1 = CFrame.new()
+			}
+		},
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, .6, 0),
+			["Left Arm"]	= CFrame.new(0, .8, 0),
+			["Right Shoulder"]	= CFrame.new(0, 0, 0),
+			["Left Shoulder"]	= CFrame.new(0, 0, 0)
+		}
+	},
+	["PFC"] = {	
+		name						= "PFC",		
+		fullname					= "Poppy's Fried Chicken",		
+		category					= "Misc",
+		description					= "A culturally significant cuisine originating from the Federation, a bucket of Poppy's Fried Chicken (made with some indeterminate number of herbs and spices) is highly treasured by it's consumers. So treasured that people would literally riot in the streets at the mere mention of it's disposal from literally anywhere... uhh what?",
+		quickdesc					= "",
+		defaultcost					= 1000,		
+		cost						= 1000,
+		slot						= 1,
+		holster						= "Hip",	
+		handles						= 1,
+		barrels						= 1,
+		canaim 						= false,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canmelee					= false,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 2,
+		equipwait					= 0.3,
+		
+		firewait					= 2,
+		chargewait					= 0,
+
+		triggermode					= "Consumable",
+		
+		effectwait					= 0,
+		effecttime					= 0,
+		
+		projectile					= {
+									KillTime = 5,
+									Speed = 2,
+									Force = 20,
+									EffectWait = 0,
+									Gravity = -20,
+									WaitAfterEffect = 1, 
+		},
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -1.2, -.5) * CFrame.Angles(math.rad(225), 0, math.rad(0)),
+				C1 = CFrame.new()
+			}
+		},
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, .6, 0),
+			["Left Arm"]	= CFrame.new(0, .8, 0),
+			["Right Shoulder"]	= CFrame.new(0, 0, 0),
+			["Left Shoulder"]	= CFrame.new(0, 0, 0)
+		}
+	},
+	["Melee"] = {
+		name						= "Melee",
+		meleewait					= .5,
+		distance					= 3.5,
+		damage						= 35,
+		teamkill					= false,
+		calcDamage = function(damage, distance)
+			return damage
+		end
+	},
+
+-- Misc
+	["Orbital drop"] = {	
+		name						= "Orbital drop",
+		teamkill					= false,
+		damage						= 50,
+		calcDamage = function(damage, distance)
+			return damage + (200 * (1/distance))
+		end,
+		vehiclemultiplier			= 10,		
+		
+		explosion					= {
+									BlastRadius = 15	
+		}
+	}
+}
+
+return module
