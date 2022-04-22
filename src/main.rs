@@ -1,26 +1,23 @@
-use std::{
-    fs::File,
-    io::{Result, BufReader, BufRead},
-};
-
-use parsers::*;
+use std::{fs::File, io::Read};
 
 mod parsers;
+use parsers::*;
 
-fn main() -> Result<()> {
-    let stats_file = File::open("stats_small.txt")?;
-    let reader = BufReader::new(stats_file);
+fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) {
+    let mut constructed = false;
 
-    for line in reader.lines() {
-        let str = line?;
+    let file_name = key_name.strip_prefix("[\"").unwrap().strip_suffix("\"]").unwrap();
+    let mut _stats_file = File::create(format!("stats/{}", file_name))
+        .expect(&format!("failed to create file {}", key_name));
 
-        if str.find("local module") != None {
-            continue;
+    while !constructed && !reader.is_empty(){
+        let str = reader.pop().expect("should pop safely");
+
+        if str == "}" {
+            constructed = true;
         }
 
-        if let Some(key) = check_for_key(&str) {
-            println!("{}", key);
-        } else if let Some(name) = check_for_string(&str, "name") {
+        if let Some(name) = check_for_string(&str, "name") {
             println!("{}", name);
         } else if let Some(full_name) = check_for_string(&str, "fullname") {
             println!("{}", full_name);
@@ -36,6 +33,31 @@ fn main() -> Result<()> {
             println!("{}", cost);
         }
     }
- 
-    Ok(())
+}
+
+fn handle_reader(buffer: &mut Vec<String>) {
+    while buffer.len() > 0 {
+        let str = buffer.pop().expect("should pop safely");
+
+        if str.find("local module") != None {
+            continue;
+        }
+
+        if let Some(key) = check_for_key(&str) {
+            handle_weapon_stats(key, buffer);
+        }
+    }
+}
+
+fn main() {
+    let mut stats_file = File::open("stats_small.txt").expect("File should be able to open");
+    let mut buf = String::new();
+    stats_file
+        .read_to_string(&mut buf)
+        .expect("to be able to read from file");
+
+    let mut buf_vec: Vec<String> = buf.split("\n").map(|v| v.to_string()).collect();
+    buf_vec.reverse();
+
+    handle_reader(&mut buf_vec);
 }
