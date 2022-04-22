@@ -4,17 +4,19 @@ mod parsers;
 use parsers::*;
 
 fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) {
-    let mut constructed = false;
-
-    let file_name = key_name.strip_prefix("[\"").unwrap().strip_suffix("\"]").unwrap();
+    let file_name = key_name
+        .strip_prefix("[\"")
+        .unwrap()
+        .strip_suffix("\"]")
+        .unwrap();
     let mut _stats_file = File::create(format!("stats/{}", file_name))
         .expect(&format!("failed to create file {}", key_name));
 
-    while !constructed && !reader.is_empty(){
+    while !reader.is_empty() {
         let str = reader.pop().expect("should pop safely");
 
         if str == "}" {
-            constructed = true;
+            break;
         }
 
         if let Some(name) = check_for_string(&str, "name") {
