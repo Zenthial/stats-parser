@@ -3,12 +3,60 @@ use std::{fs::File, io::Read};
 mod parsers;
 use parsers::*;
 
+enum ValueType {
+    String,
+    Number,
+    CustomStringFormat(String), // where the String is appended to the front of the found string
+    Function(u16), // where the u16 is the expected amount of lines
+    Table(u16), // where the u16 is the expect amount of lines until a }
+}
+
+struct Options {
+    old_name: String,
+    new_name: String,
+    value_type: ValueType,
+}
+
+impl Options {
+    pub fn new(old_name: &str, new_name: &str, val: ValueType) -> Options {
+        Options {
+            old_name: old_name.to_string(),
+            new_name: new_name.to_string(),
+            value_type: val,
+        }
+    }
+}
+
+fn get_options() -> Vec<Options> {
+    let options_vec = vec![
+        Options::new("name", "Name", ValueType::String),
+        Options::new("fullname", "FullName", ValueType::String),
+        Options::new("category", "Category", ValueType::String),
+        Options::new("description", "Description", ValueType::String),
+        Options::new("quickdesc", "QuickDescription", ValueType::String),
+        Options::new("cost", "WeaponCost", ValueType::Number),
+        Options::new("slot", "Slot", ValueType::Number),
+        Options::new("barrels", "NumBarrels", ValueType::Number),
+        Options::new("handles", "NumHandles", ValueType::Number),
+        Options::new(
+            "holster",
+            "Holster",
+            ValueType::CustomStringFormat("Holsters.".to_string()),
+        ),
+    ];
+
+    options_vec
+}
+
 fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) {
+    let options = get_options();
+
     let file_name = key_name
         .strip_prefix("[\"")
         .unwrap()
         .strip_suffix("\"]")
         .unwrap();
+
     let mut _stats_file = File::create(format!("stats/{}", file_name))
         .expect(&format!("failed to create file {}", key_name));
 
@@ -19,20 +67,42 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) {
             break;
         }
 
-        if let Some(name) = check_for_string(&str, "name") {
-            println!("{}", name);
-        } else if let Some(full_name) = check_for_string(&str, "fullname") {
-            println!("{}", full_name);
-        } else if let Some(category) = check_for_string(&str, "category") {
-            println!("{}", category);
-        } else if let Some(description) = check_for_string(&str, "description") {
-            println!("{}", description);
-        } else if let Some(quick_desc) = check_for_string(&str, "quickdesc") {
-            println!("{}", quick_desc);
-        } else if let Some(default_cost) = check_for_number(&str, "defaultcost") {
-            println!("{}", default_cost);
-        } else if let Some(cost) = check_for_number(&str, "cost") {
-            println!("{}", cost);
+        for option in options.iter() {
+            match &option.value_type {
+                ValueType::String => {
+                    if let Some(result_str) = check_for_string(&str, &option.old_name) {
+                        println!("{} = {}", option.new_name, result_str);
+                        break;
+                    }
+                }
+                ValueType::Number => {
+                    if let Some(num) = check_for_number(&str, &option.old_name) {
+                        println!("{} = {}", option.new_name, num);
+                        break;
+                    }
+                }
+                ValueType::CustomStringFormat(format) => {
+                    if let Some(mut result_str) = check_for_string(&str, &option.old_name) {
+                        result_str = result_str
+                            .strip_prefix("\"")
+                            .expect("should have a \"")
+                            .to_string()
+                            .strip_suffix("\"")
+                            .expect("should have a \"")
+                            .to_string();
+
+                        println!(
+                            "{} = {}",
+                            option.new_name,
+                            format!("{}{}", format, result_str)
+                        );
+
+                        break;
+                    }
+                }
+                ValueType::Function(_) => todo!(),
+                ValueType::Table(_) => todo!(),
+            }
         }
     }
 }
