@@ -23,11 +23,7 @@
 	CoolTime = 3
 	CoolWait = 0.3
 	CalculateDamage = function(damage, distance)
-		if damage > 10 then
-			return damage
-		else
-			return 10
-		end
+		return damage
 	end,
 	VehicleMultiplier = 1
 	FireRate = 11

@@ -103,7 +103,7 @@ pub fn parse_function(
     func_name: &str,
     replace_name: &str,
     out_file: &mut File,
-) -> Result<()> {
+) -> Result<bool> {
     let new_line = line.trim();
 
     if new_line.starts_with(func_name) {
@@ -141,9 +141,11 @@ pub fn parse_function(
                 out_file.write_all(format!("{}{}\n", "\t".repeat(tabs), line).as_bytes())?;
             }
         }
+
+        return Ok(true);
     }
 
-    Ok(())
+    Ok(false)
 }
 
 pub fn parse_table(
@@ -152,7 +154,7 @@ pub fn parse_table(
     table_name: &str,
     replace_name: &str,
     out_file: &mut File,
-) -> Result<()> {
+) -> Result<bool> {
     let new_line = line.trim();
 
     if new_line.starts_with(table_name) {
@@ -185,7 +187,9 @@ pub fn parse_table(
                 out_file.write_all(format!("{}{}\n", "\t".repeat(tabs), line).as_bytes())?;
             }
         }
+
+        return Ok(true);
     }
 
-    Ok(())
+    Ok(false)
 }

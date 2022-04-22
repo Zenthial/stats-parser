@@ -151,22 +151,30 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result
                         }
                     }
                     ValueType::Function => {
-                        parse_function(
+                        let result = parse_function(
                             &str,
                             reader,
                             &option.old_name,
                             &option.new_name,
                             &mut stats_file,
                         )?;
+                        if result {
+                            option.found = true;
+                            break;
+                        }
                     }
                     ValueType::Table => {
-                        parse_table(
+                        let result = parse_table(
                             &str,
                             reader,
                             &option.old_name,
                             &option.new_name,
                             &mut stats_file,
                         )?;
+                        if result {
+                            option.found = true;
+                            break;
+                        }
                     }
                     ValueType::Float => {
                         if let Some(num) = parse_float(&str, &option.old_name) {
@@ -191,6 +199,8 @@ fn handle_reader(buffer: &mut Vec<String>) {
         let str = buffer.pop().expect("should pop safely");
 
         if str.find("local module") != None {
+            continue;
+        } else if str.starts_with("--") {
             continue;
         }
 

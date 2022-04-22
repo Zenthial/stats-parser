@@ -1,3 +1,4 @@
+-- Assault Weapons
 	["W17"] = {
 		name						= "W17",
 		fullname					= "Assault Rifle",
@@ -39,11 +40,7 @@
 		
 		damage						= 8,
 		calcDamage = function(damage, distance)
-			if damage > 10 then
-				return damage
-			else
-				return 10
-			end
+			return damage
 		end,
 		vehiclemultiplier			= 1,
 		
@@ -68,5 +65,73 @@
 			["Left Arm"]	= CFrame.new(-0.2, 0, 1.3),
 			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
 			["Left Shoulder"]	= CFrame.new(-0.5, 0, 0.5)
+		}
+	},
+	["W18"] = {
+		name						= "W18",
+		fullname					= "Combat Rifle",
+		category					= "Assault",
+		description					= "Special operations run by Shock Troopers demanded a more versatile weapon than the W17, therefore it was completely re-designed to produce a shorter-barreled version. The resulting rifle is fitted with an EM scope and a suppressor. This rifle is perfect for Shock Troopers as a soldier can ensure long-range hits and maintain concealment.",
+		quickdesc					= "Automatic, Single Shot, Silenced",
+		defaultcost					= 2000,
+		cost						= 2000,
+		slot						= 1,
+		holster						= "Back",
+		handles						= 1,
+		barrels						= 1,
+		canaim						= true,
+		cansprint 					= true,
+		cancrouch 					= true,
+		canheadshot					= true,
+		headshotmultiplier			= 2,
+		teamkill					= false,
+		defaultlocked 				= false,
+		walkspeedreduce				= 0,
+		equipwait					= 0.3,
+		
+		batterymin 					= 2,
+		batterymax 					= 3,
+		shotsdeplete				= 12,
+		
+		maxspread					= 2,
+		minspread					= .25,
+		readjust					= 1.5,
+		camerarecoil                = 1.7,
+		recoilrate					= 0.5,
+		maxrecoil					= 15,
+		
+		numshots					= 3,
+		
+		heatrate 					= 3,
+		cooltime 					= 2,	
+		coolwait 					= 0.3,
+		
+		damage						= 7,
+		calcDamage = function(damage, distance)
+			return damage
+		end,
+		vehiclemultiplier			= 1,
+		
+		particlelifetime			= .1,
+		
+		firerate					= 11,
+		firewait 					= 0.15,
+		chargewait					= 0,
+		triggermode 				= "Auto",
+		firemode 					= "Single",
+		bullettype					= "Ray",
+		
+		handlewelds 				= {
+			{	limb = "Right Arm",
+				C0 = CFrame.new(0, -0.5, -0.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
+				C1 = CFrame.new()
+			},
+		},
+		
+		fpsoffset					= {
+			["Right Arm"]	= CFrame.new(0, 0, .3),
+			["Left Arm"]	= CFrame.new(-.2, 0, 1.3),
+			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
+			["Left Shoulder"]	= CFrame.new(-.5, 0, 1)
 		}
 	},
