@@ -1,4 +1,7 @@
-use std::{fs::File, io::Read};
+use std::{
+    fs::File,
+    io::{self, Read, Write},
+};
 
 mod parsers;
 use parsers::*;
@@ -7,8 +10,8 @@ enum ValueType {
     String,
     Number,
     CustomStringFormat(String), // where the String is appended to the front of the found string
-    Function(u16), // where the u16 is the expected amount of lines
-    Table(u16), // where the u16 is the expect amount of lines until a }
+    Function(u16),              // where the u16 is the expected amount of lines
+    Table(u16),                 // where the u16 is the expect amount of lines until a }
 }
 
 struct Options {
@@ -48,7 +51,7 @@ fn get_options() -> Vec<Options> {
     options_vec
 }
 
-fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) {
+fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result<()> {
     let options = get_options();
 
     let file_name = key_name
@@ -57,8 +60,10 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) {
         .strip_suffix("\"]")
         .unwrap();
 
-    let mut _stats_file = File::create(format!("stats/{}", file_name))
+    let mut stats_file = File::create(format!("stats/{}", file_name))
         .expect(&format!("failed to create file {}", key_name));
+
+    stats_file.write_all(format!("{} = {{\n", key_name).as_bytes())?;
 
     while !reader.is_empty() {
         let str = reader.pop().expect("should pop safely");
@@ -71,13 +76,14 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) {
             match &option.value_type {
                 ValueType::String => {
                     if let Some(result_str) = check_for_string(&str, &option.old_name) {
-                        println!("{} = {}", option.new_name, result_str);
+                        stats_file
+                            .write(format!("\t{} = {}\n", option.new_name, result_str).as_bytes())?;
                         break;
                     }
                 }
                 ValueType::Number => {
                     if let Some(num) = check_for_number(&str, &option.old_name) {
-                        println!("{} = {}", option.new_name, num);
+                        stats_file.write(format!("\t{} = {}\n", option.new_name, num).as_bytes())?;
                         break;
                     }
                 }
@@ -91,12 +97,14 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) {
                             .expect("should have a \"")
                             .to_string();
 
-                        println!(
-                            "{} = {}",
-                            option.new_name,
-                            format!("{}{}", format, result_str)
-                        );
-
+                        stats_file.write(
+                            format!(
+                                "\t{} = {}\n",
+                                option.new_name,
+                                format!("{}{}", format, result_str)
+                            )
+                            .as_bytes(),
+                        )?;
                         break;
                     }
                 }
@@ -105,6 +113,10 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) {
             }
         }
     }
+
+    stats_file.write_all(b"}\n")?;
+
+    Ok(())
 }
 
 fn handle_reader(buffer: &mut Vec<String>) {
@@ -116,7 +128,7 @@ fn handle_reader(buffer: &mut Vec<String>) {
         }
 
         if let Some(key) = check_for_key(&str) {
-            handle_weapon_stats(key, buffer);
+            let _res = handle_weapon_stats(key, buffer);
         }
     }
 }

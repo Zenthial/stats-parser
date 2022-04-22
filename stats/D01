@@ -1,0 +1,12 @@
+["D01"] = {
+	Name = "D01"
+	FullName = "Orbital Target Designator-01"
+	Category = "Assault"
+	Description = "The ability for a squad commander to call in orbital fire support is invaluable. Once a target has been designated by the D01, a command is relayed to a appropriately equipped warship or satellite in orbit to fire its phaser array to a devastating effect, within seconds."
+	QuickDescription = "Single Shot"
+	WeaponCost = 94000
+	Slot = 2
+	Holster = Holsters.Hip
+	NumHandles = 1
+	NumBarrels = 1
+}
