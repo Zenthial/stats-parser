@@ -102,9 +102,13 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result
     stats_file.write_all(format!("{} = {{\n", key_name).as_bytes())?;
 
     while !reader.is_empty() {
-        let str = reader.pop().expect("should pop safely");
+        let str = reader
+            .pop()
+            .expect("should pop safely")
+            .trim_end()
+            .to_string();
 
-        if str == "}" {
+        if str == "\t}," {
             break;
         }
 
