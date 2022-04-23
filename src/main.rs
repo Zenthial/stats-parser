@@ -102,10 +102,10 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result
 
                                 stats_file.write(
                                     format!(
-                                        "{}{} = {},\n",
+                                        "{}{} = {}\n",
                                         "\t".repeat(START_TABS - 1),
                                         "BulletCache",
-                                        "Caches.DefaultCache\n"
+                                        "Caches.DefaultCache,\n"
                                     )
                                     .as_bytes(),
                                 )?;

@@ -38,6 +38,7 @@ pub fn get_options() -> Vec<Options> {
         Options::new("description", "Description", ValueType::String),
         Options::new("quickdesc", "QuickDescription", ValueType::String),
         Options::new("cansprint", "CanSprint", ValueType::String),
+        Options::new("type", "Type", ValueType::String),
         Options::new("cancrouch", "CanCrouch", ValueType::String),
         Options::new("cost", "WeaponCost", ValueType::Number),
         Options::new("slot", "Slot", ValueType::Number),
