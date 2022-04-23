@@ -6,86 +6,8 @@ use std::{
 mod parsers;
 use parsers::*;
 
-enum ValueType {
-    String,
-    Number,
-    Float,
-    CustomStringFormat(String), // where the String is appended to the front of the found string
-    Function,
-    Table,
-}
-
-struct Options {
-    old_name: String,
-    new_name: String,
-    value_type: ValueType,
-    found: bool,
-}
-
-impl Options {
-    pub fn new(old_name: &str, new_name: &str, val: ValueType) -> Options {
-        Options {
-            old_name: old_name.to_string(),
-            new_name: new_name.to_string(),
-            value_type: val,
-            found: false,
-        }
-    }
-}
-
-fn get_options() -> Vec<Options> {
-    let options_vec = vec![
-        Options::new("name", "Name", ValueType::String),
-        Options::new("fullname", "FullName", ValueType::String),
-        Options::new("category", "Category", ValueType::String),
-        Options::new("description", "Description", ValueType::String),
-        Options::new("quickdesc", "QuickDescription", ValueType::String),
-        Options::new("cansprint", "CanSprint", ValueType::String),
-        Options::new("cancrouch", "CanCrouch", ValueType::String),
-        Options::new("cost", "WeaponCost", ValueType::Number),
-        Options::new("slot", "Slot", ValueType::Number),
-        Options::new("barrels", "NumBarrels", ValueType::Number),
-        Options::new("handles", "NumHandles", ValueType::Number),
-        Options::new("walkspeedreduce", "WalkspeedReduce", ValueType::Number),
-        Options::new("batterymin", "BatteryDepletionMin", ValueType::Number),
-        Options::new("batterymax", "BatteryDepletionMax", ValueType::Number),
-        Options::new("shotsdeplete", "ShotsDeplete", ValueType::Number),
-        Options::new(
-            "holster",
-            "Holster",
-            ValueType::CustomStringFormat("Holsters.".to_string()),
-        ),
-        Options::new(
-            "triggermode",
-            "GunType",
-            ValueType::CustomStringFormat("GunTypes.".to_string()),
-        ),
-        Options::new(
-            "bullettype",
-            "BulletType",
-            ValueType::CustomStringFormat("BulletType.".to_string()),
-        ),
-        Options::new(
-            "firemode",
-            "FireMode",
-            ValueType::CustomStringFormat("FireMode.".to_string()),
-        ),
-        Options::new("equipwait", "EquipTime", ValueType::Float),
-        Options::new("chargewait", "ChargeWait", ValueType::Float),
-        Options::new("firerate", "FireRate", ValueType::Float),
-        Options::new("maxspread", "MaxSpread", ValueType::Float),
-        Options::new("minspread", "MinSpread", ValueType::Float),
-        Options::new("heatrate", "HeatRate", ValueType::Float),
-        Options::new("cooltime", "CoolTime", ValueType::Float),
-        Options::new("coolwait", "CoolWait", ValueType::Float),
-        Options::new("headshotmultiplier", "HeadshotMultiplier", ValueType::Float),
-        Options::new("vehiclemultiplier", "VehicleMultiplier", ValueType::Float),
-        Options::new("calcDamage", "CalculateDamage", ValueType::Function),
-        Options::new("handlewelds", "HandleWelds", ValueType::Table),
-    ];
-
-    options_vec
-}
+mod initializers;
+use initializers::*;
 
 fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result<()> {
     let mut options = get_options();
@@ -94,12 +16,13 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result
         .strip_prefix("[\"")
         .unwrap()
         .strip_suffix("\"]")
-        .unwrap();
+        .expect(&format!("To be able to strip {}", key_name));
 
-    let mut stats_file = File::create(format!("stats/{}", file_name))
+    let mut stats_file = File::create(format!("stats/{}.lua", file_name))
         .expect(&format!("failed to create file {}", key_name));
 
-    stats_file.write_all(format!("{} = {{\n", key_name).as_bytes())?;
+    initialize_file_header_types(&mut stats_file)?;
+    stats_file.write_all(b"return {\n")?;
 
     while !reader.is_empty() {
         let str = reader
@@ -118,16 +41,30 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result
                     ValueType::String => {
                         if let Some(result_str) = parse_string(&str, &option.old_name) {
                             stats_file.write(
-                                format!("\t{} = {}\n", option.new_name, result_str).as_bytes(),
+                                format!(
+                                    "{}{} = {},\n",
+                                    "\t".repeat(START_TABS - 1),
+                                    option.new_name,
+                                    result_str
+                                )
+                                .as_bytes(),
                             )?;
+
                             option.found = true;
                             break;
                         }
                     }
                     ValueType::Number => {
                         if let Some(num) = parse_number(&str, &option.old_name) {
-                            stats_file
-                                .write(format!("\t{} = {}\n", option.new_name, num).as_bytes())?;
+                            stats_file.write(
+                                format!(
+                                    "{}{} = {},\n",
+                                    "\t".repeat(START_TABS - 1),
+                                    option.new_name,
+                                    num
+                                )
+                                .as_bytes(),
+                            )?;
                             option.found = true;
                             break;
                         }
@@ -144,12 +81,36 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result
 
                             stats_file.write(
                                 format!(
-                                    "\t{} = {}\n",
+                                    "{}{} = {},\n",
+                                    "\t".repeat(START_TABS - 1),
                                     option.new_name,
                                     format!("{}{}", format, result_str)
                                 )
                                 .as_bytes(),
                             )?;
+
+                            if option.new_name.eq("BulletType") {
+                                stats_file.write(
+                                    format!(
+                                        "{}{} = {},\n",
+                                        "\t".repeat(START_TABS - 1),
+                                        "BulletModel",
+                                        "Bullets.Default"
+                                    )
+                                    .as_bytes(),
+                                )?;
+
+                                stats_file.write(
+                                    format!(
+                                        "{}{} = {},\n",
+                                        "\t".repeat(START_TABS - 1),
+                                        "BulletCache",
+                                        "Caches.DefaultCache\n"
+                                    )
+                                    .as_bytes(),
+                                )?;
+                            }
+
                             option.found = true;
                             break;
                         }
@@ -182,8 +143,15 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result
                     }
                     ValueType::Float => {
                         if let Some(num) = parse_float(&str, &option.old_name) {
-                            stats_file
-                                .write(format!("\t{} = {}\n", option.new_name, num).as_bytes())?;
+                            stats_file.write(
+                                format!(
+                                    "{}{} = {},\n",
+                                    "\t".repeat(START_TABS - 1),
+                                    option.new_name,
+                                    num
+                                )
+                                .as_bytes(),
+                            )?;
                             option.found = true;
                             break;
                         }
@@ -215,7 +183,7 @@ fn handle_reader(buffer: &mut Vec<String>) {
 }
 
 fn main() {
-    let mut stats_file = File::open("stats_small.txt").expect("File should be able to open");
+    let mut stats_file = File::open("stats.txt").expect("File should be able to open");
     let mut buf = String::new();
     stats_file
         .read_to_string(&mut buf)

@@ -6,6 +6,8 @@ use std::{
 use lazy_static::lazy_static;
 use regex::Regex;
 
+pub const START_TABS: usize = 2;
+
 pub fn parse_key(line: &String) -> Option<String> {
     lazy_static! {
         static ref RE: Regex = Regex::new(r"\[[^\]]*\]").unwrap();
@@ -32,12 +34,14 @@ pub fn parse_string(line: &String, search_string: &str) -> Option<String> {
         assert!(split.len() == 2);
 
         let name_untrimmed = split.get(1).expect("name to be gotten");
-        let value = name_untrimmed
-            .strip_suffix(",")
-            .expect("this to work")
-            .trim();
+        let str_value;
 
-        return Some(value.to_string());
+        match name_untrimmed.strip_suffix(",") {
+            Some(str) => str_value = str.trim(),
+            None => str_value = name_untrimmed.trim(),
+        }
+
+        return Some(str_value.to_string());
     }
 
     None
@@ -52,10 +56,12 @@ pub fn parse_number(line: &String, search_string: &str) -> Option<i32> {
         assert!(split.len() == 2);
 
         let name_untrimmed = split.get(1).expect("name to be gotten");
-        let str_value = name_untrimmed
-            .strip_suffix(",")
-            .expect("this to work")
-            .trim();
+        let str_value;
+
+        match name_untrimmed.strip_suffix(",") {
+            Some(str) => str_value = str.trim(),
+            None => str_value = name_untrimmed.trim(),
+        }
 
         let int_val_result = str_value.parse::<i32>();
         match int_val_result {
@@ -108,7 +114,7 @@ pub fn parse_function(
 
     if new_line.starts_with(func_name) {
         let mut num_ends = 1;
-        let mut tabs = 2;
+        let mut tabs = START_TABS;
 
         let line_split: Vec<String> = new_line.split("=").map(|v| v.to_string()).collect();
         out_file.write_all(
@@ -159,7 +165,7 @@ pub fn parse_table(
 
     if new_line.starts_with(table_name) {
         let mut num_ends = 1;
-        let mut tabs = 2;
+        let mut tabs = START_TABS;
         let line_split: Vec<String> = new_line.split("=").map(|v| v.to_string()).collect();
         out_file.write_all(
             format!(
