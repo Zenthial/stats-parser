@@ -85,10 +85,12 @@ pub fn parse_float(line: &String, search_string: &str) -> Option<f32> {
         assert!(split.len() == 2);
 
         let name_untrimmed = split.get(1).expect("name to be gotten");
-        let str_value = name_untrimmed
-            .strip_suffix(",")
-            .expect("this to work")
-            .trim();
+        let str_value;
+
+        match name_untrimmed.strip_suffix(",") {
+            Some(str) => str_value = str.trim(),
+            None => str_value = name_untrimmed.trim(),
+        }
 
         let int_val_result = str_value.parse::<f32>();
         match int_val_result {
