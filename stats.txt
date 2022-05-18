@@ -3168,142 +3168,6 @@ local module = {
 			["Left Shoulder"]	= CFrame.new(-2, 0, 1.5)
 		}
 	},
-	
--- Literal Cancer
-	["GPR"] = {
-		name						= "GPR",
-		fullname					= "GPR",
-		category					= "Assault",
-		description					= "A controverial and toxic legacy of the WIJ Corporation, the Roblox Clan League was a universal and rudimentary combat system originally intended to provide a fair and cost-effective platform for settling disputes, later evolving into a common OS for many future clan combat engines. The GPR comprised one half of the RCL system's tiny arsenal, the origins of it's name unknown.",	
-		quickdesc					= "Literal Cancer",	
-		defaultcost					= 0,
-		cost						= 0,
-		slot						= 1,
-		holster						= "Back",
-		handles						= 1,
-		barrels						= 1,
-		canaim						= false,
-		cansprint 					= false,
-		cancrouch 					= false,
-		canmelee					= false,
-		teamkill					= false,
-		defaultlocked 				= false,
-		walkspeedreduce				= 0,
-		equipwait					= 0.1,
-		
-		batterymin 					= 0,
-		batterymax 					= 0,
-		shotsdeplete				= 10,
-		
-		maxspread					= 0.9,
-		minspread					= 0.9,
-		readjust					= 2,
-		camerarecoil                = 0,
-		recoilrate					= .5,
-		maxrecoil					= 18,
-		
-		numshots					= 3,
-		
-		heatrate 					= 3.3,
-		cooltime 					= 3,	
-		coolwait 					= 9999,
-		
-		damage						= 10,
-		calcDamage = function(damage, distance)
-			return damage
-		end,
-		vehiclemultiplier			= 100,
-		
-		particlelifetime			= .1,
-		
-		firerate					= 6.5,
-		firewait 					= 0.15,
-		chargewait					= 0,
-		triggermode 				= "Auto",
-		firemode 					= "Single",
-		bullettype					= "Ray",
-		
-		handlewelds 				= {
-			{	limb = "Right Arm",
-				C0 = CFrame.new(0, -0.5, -0.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
-				C1 = CFrame.new()
-			},
-		},
-		
-		fpsoffset					= {
-			["Right Arm"]	= CFrame.new(0, 0, .3),
-			["Left Arm"]	= CFrame.new(-0.2, 0, 1.3),
-			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
-			["Left Shoulder"]	= CFrame.new(-0.5, 0, 0.5)
-		}
-	},
-	["PSTL"] = {
-		name						= "PSTL",
-		fullname					= "PiSToL",
-		category					= "Handgun",
-		description					= "A controverial and toxic legacy of the WIJ Corporation, the Roblox Clan League was a universal and rudimentary combat system originally intended to provide a fair and cost-effective platform for settling disputes, later evolving into a common OS for many future clan combat engines. The PSTL comprised one half of the RCL system's tiny arsenal. This variant is based upon the so-called '4.0'. ",	
-		quickdesc					= "Literal Cancer",	
-		defaultcost					= 0,
-		cost						= 0,
-		slot						= 2,
-		holster						= "Back",
-		handles						= 1,
-		barrels						= 1,
-		canaim						= false,
-		cansprint 					= false,
-		cancrouch 					= false,
-		canmelee					= false,
-		teamkill					= false,
-		defaultlocked 				= false,
-		walkspeedreduce				= 0,
-		equipwait					= 0.1,
-		
-		batterymin 					= 0,
-		batterymax 					= 0,
-		shotsdeplete				= 10,
-		
-		maxspread					= 0.9,
-		minspread					= 0.9,
-		readjust					= 2,
-		camerarecoil                = 0,
-		recoilrate					= 0.5,
-		maxrecoil					= 18,
-		
-		numshots					= 1,
-		
-		heatrate 					= 8.3,
-		cooltime 					= 3,	
-		coolwait 					= 9999,
-		
-		damage						= 10,
-		calcDamage = function(damage, distance)
-			return damage
-		end,
-		vehiclemultiplier			= 100,
-		
-		particlelifetime			= .1,
-		
-		firerate					= 1,
-		firewait 					= 0.3,
-		chargewait					= 0,
-		triggermode 				= "Semi",
-		firemode 					= "Single",
-		bullettype					= "Ray",
-		
-		handlewelds 				= {
-			{	limb = "Right Arm",
-				C0 = CFrame.new(0, -0.5, -0.25) * CFrame.Angles(math.rad(-90),math.rad(180),0),
-				C1 = CFrame.new()
-			},
-		},
-		
-		fpsoffset					= {
-			["Right Arm"]	= CFrame.new(0, 0, 0.3),
-			["Left Arm"]	= CFrame.new(-0.2, 0, 1.3),
-			["Right Shoulder"]	= CFrame.new(2.5, 0, 0),
-			["Left Shoulder"]	= CFrame.new(-0.5, 0, 0.5)
-		}
-	},
 
 -- Gadgets
 	["NDG"] = {	
@@ -4099,27 +3963,6 @@ local module = {
 		energyregen					= 3,
 		energymin					= 99
 	},
-	["NJ-CT"] = {	
-		name						= "NJ-CT",
-		fullname					= "Matter manipulator",		
-		category					= "Suit module",
-		description					= "Developed by Gorius Armories for the WIJ Officer Council.",
-		quickdesc					= "?",
-		defaultcost					= 0,		
-		cost						= 0,
-		slot						= 4,
-		defaultlocked 				= false,
-				
-		holster						= "TorsoModule",
-		
-		trigger						= "Press",
-		
-		restrictions				= { ["firing"] = false, ["damage"] = false, ["sitting"] = true },
-		
- 		energydeplete				= .2,
-		energyregen					= 10,
-		energymin					= 2
-	},
 	
 	["OVER-C"] = {	
 		name						= "OVER-C",
@@ -4460,16 +4303,6 @@ local module = {
 			["Right Shoulder"]	= CFrame.new(0, 0, 0),
 			["Left Shoulder"]	= CFrame.new(0, 0, 0)
 		}
-	},
-	["Melee"] = {
-		name						= "Melee",
-		meleewait					= .5,
-		distance					= 3.5,
-		damage						= 35,
-		teamkill					= false,
-		calcDamage = function(damage, distance)
-			return damage
-		end
 	},
 
 -- Misc

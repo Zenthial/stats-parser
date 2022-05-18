@@ -54,8 +54,6 @@ pub fn get_options() -> Vec<Options> {
         Options::new("barrels", "NumBarrels", ValueType::Number),
         Options::new("handles", "NumHandles", ValueType::Number),
         Options::new("walkspeedreduce", "WalkspeedReduce", ValueType::Number),
-        Options::new("batterymin", "BatteryDepletionMin", ValueType::Float),
-        Options::new("batterymax", "BatteryDepletionMax", ValueType::Float),
         Options::new("shotsdeplete", "ShotsDeplete", ValueType::Number),
         Options::new(
             "holster",
@@ -79,6 +77,10 @@ pub fn get_options() -> Vec<Options> {
         ),
         Options::new("equipwait", "EquipTime", ValueType::Float),
         Options::new("chargewait", "ChargeWait", ValueType::Float),
+        Options::new("batterymin", "BatteryDepletionMin", ValueType::Float),
+        Options::new("batterymax", "BatteryDepletionMax", ValueType::Float),
+        Options::new("damage", "Damage", ValueType::Float),
+        Options::new("damagenerf", "DamageNerf", ValueType::Float),
         Options::new("firerate", "FireRate", ValueType::Float),
         Options::new("maxspread", "MaxSpread", ValueType::Float),
         Options::new("minspread", "MinSpread", ValueType::Float),
@@ -92,6 +94,7 @@ pub fn get_options() -> Vec<Options> {
         Options::new("energydeplete", "EnergyDeplete", ValueType::Float),
         Options::new("energyregen", "EnergyRegen", ValueType::Float),
         Options::new("energymin", "EnergyMin", ValueType::Float),
+        Options::new("BlastRadius", "BlastRadius", ValueType::Float),
         Options::new("calcDamage", "CalculateDamage", ValueType::Function),
         Options::new("handlewelds", "HandleWelds", ValueType::Table),
     ];

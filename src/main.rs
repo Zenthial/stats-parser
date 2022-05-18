@@ -9,7 +9,22 @@ use parsers::*;
 mod initializers;
 use initializers::*;
 
-fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result<()> {
+const BLACKLISTED_WEAPONS: &[&str] = &[
+    "GPR",
+    "PSTL",
+    "BUGSPRAY",
+    "NJ-CT",
+    "Right Arm",
+    "Right Shoulder",
+    "Left Arm",
+    "Left Shoulder",
+    "firing",
+    "damage",
+    "sitting",
+    "TEST",
+];
+
+fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result<f64> {
     let mut options = get_options();
 
     let file_name = key_name
@@ -23,6 +38,8 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result
 
     initialize_file_header_types(&mut stats_file)?;
     stats_file.write_all(b"return {\n")?;
+
+    let mut fire_rate = 0.0;
 
     while !reader.is_empty() {
         let str = reader
@@ -56,6 +73,18 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result
                     }
                     ValueType::Number => {
                         if let Some(num) = parse_number(&str, &option.old_name) {
+                            if option.new_name == "Slot" {
+                                if num == 1 || num == 2 {
+                                    stats_file.write_all(
+                                        format!(
+                                            "{}AmmoType = AmmoType.Battery,\n",
+                                            "\t".repeat(START_TABS - 1)
+                                        )
+                                        .as_bytes(),
+                                    )?;
+                                }
+                            }
+
                             stats_file.write(
                                 format!(
                                     "{}{} = {},\n",
@@ -90,16 +119,6 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result
                             )?;
 
                             if option.new_name.eq("BulletType") {
-                                stats_file.write(
-                                    format!(
-                                        "{}{} = {},\n",
-                                        "\t".repeat(START_TABS - 1),
-                                        "BulletModel",
-                                        "Bullets.Default"
-                                    )
-                                    .as_bytes(),
-                                )?;
-
                                 stats_file.write(
                                     format!(
                                         "{}{} = {}\n",
@@ -143,6 +162,10 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result
                     }
                     ValueType::Float => {
                         if let Some(num) = parse_float(&str, &option.old_name) {
+                            if option.new_name == "FireRate" {
+                                fire_rate = num.into();
+                            }
+
                             stats_file.write(
                                 format!(
                                     "{}{} = {},\n",
@@ -163,10 +186,11 @@ fn handle_weapon_stats(key_name: String, reader: &mut Vec<String>) -> io::Result
 
     stats_file.write_all(b"}\n")?;
 
-    Ok(())
+    Ok(fire_rate)
 }
 
 fn handle_reader(buffer: &mut Vec<String>) {
+    let mut highest_fire_rate = 0.0;
     while buffer.len() > 0 {
         let str = buffer.pop().expect("should pop safely");
 
@@ -177,9 +201,33 @@ fn handle_reader(buffer: &mut Vec<String>) {
         }
 
         if let Some(key) = parse_key(&str) {
-            let _res = handle_weapon_stats(key, buffer);
+            let mut should_continue = false;
+
+            for string in BLACKLISTED_WEAPONS {
+                if key.find(string) != None {
+                    should_continue = true;
+                    break;
+                }
+            }
+
+            if should_continue {
+                continue;
+            }
+
+            let res = handle_weapon_stats(key, buffer);
+
+            match res {
+                Ok(fire_rate) => {
+                    if highest_fire_rate < fire_rate {
+                        highest_fire_rate = fire_rate;
+                    }
+                }
+                Err(_) => {}
+            }
         }
     }
+
+    println!("highest fire rate is {}", highest_fire_rate);
 }
 
 fn main() {
